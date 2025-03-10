@@ -1,8 +1,8 @@
-package com.chasion.cloudcommonsapi.apis;
+package com.chasion.apis;
 
-import com.chasion.cloudcommonsapi.entity.DiscussPostDTO;
-import com.chasion.cloudcommonsapi.entity.Page;
-import com.chasion.cloudcommonsapi.resp.ResultData;
+import com.chasion.entity.DiscussPostDTO;
+import com.chasion.entity.Page;
+import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

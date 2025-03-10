@@ -1,4 +1,4 @@
-package com.chasion.cloudwebui.config;
+package com.chasion.config;
 
 import feign.Logger;
 import feign.Retryer;

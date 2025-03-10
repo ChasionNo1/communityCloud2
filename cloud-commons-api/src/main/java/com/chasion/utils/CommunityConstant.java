@@ -1,4 +1,4 @@
-package com.chasion.community.util;
+package com.chasion.utils;
 
 public interface CommunityConstant {
 

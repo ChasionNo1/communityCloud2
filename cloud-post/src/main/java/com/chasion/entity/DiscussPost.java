@@ -1,4 +1,4 @@
-package com.chasion.cloudpost.entity;
+package com.chasion.entity;
 
 import lombok.Data;
 import java.util.Date;

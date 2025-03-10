@@ -1,13 +1,13 @@
-package com.chasion.cloudpost.controller;
+package com.chasion.controller;
 
-import com.chasion.cloudcommonsapi.entity.DiscussPostDTO;
-import com.chasion.cloudcommonsapi.entity.Page;
-import com.chasion.cloudcommonsapi.resp.ResultData;
-import com.chasion.cloudcommonsapi.resp.ReturnCodeEnum;
-import com.chasion.cloudpost.entity.*;
+import com.chasion.entity.DiscussPostDTO;
+import com.chasion.entity.Page;
+import com.chasion.resp.ResultData;
+import com.chasion.resp.ReturnCodeEnum;
+import com.chasion.entity.*;
 //import com.chasion.cloudpost.event.EventProducer;
 //import com.chasion.cloudpost.service.CommentService;
-import com.chasion.cloudpost.service.DiscussPostService;
+import com.chasion.service.DiscussPostService;
 //import com.chasion.cloudpost.service.LikeService;
 //import com.chasion.cloudpost.service.UserService;
 //import com.chasion.cloudpost.util.CommunityConstant;

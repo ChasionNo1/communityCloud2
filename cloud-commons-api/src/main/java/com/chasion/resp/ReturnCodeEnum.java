@@ -1,4 +1,4 @@
-package com.chasion.cloudcommonsapi.resp;
+package com.chasion.resp;
 
 import lombok.Getter;
 

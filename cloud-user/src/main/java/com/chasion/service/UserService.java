@@ -1,10 +1,11 @@
-package com.chasion.clouduser.service;
+package com.chasion.service;
 
-import com.chasion.cloudcommonsapi.entity.UserDTO;
-import com.chasion.cloudcommonsapi.utils.CommunityUtil;
-import com.chasion.cloudcommonsapi.utils.MailClient;
-import com.chasion.clouduser.dao.UserMapper;
-import com.chasion.clouduser.entity.User;
+import com.chasion.entity.UserDTO;
+import com.chasion.utils.CommunityConstant;
+import com.chasion.utils.CommunityUtil;
+import com.chasion.utils.MailClient;
+import com.chasion.dao.UserMapper;
+import com.chasion.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,10 @@ import org.thymeleaf.context.Context;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 @Service
-public class UserService {
+public class UserService implements CommunityConstant {
 
     @Autowired
     private UserMapper userMapper;
@@ -44,6 +44,24 @@ public class UserService {
             userDTO.setStatus(user.getStatus());
             userDTO.setCreateTime(user.getCreateTime());
             userDTO.setHeaderUrl(user.getHeaderUrl());
+            userDTO.setActivationCode(user.getActivationCode());
+        }
+        return userDTO;
+    }
+
+    // 根据用户名查询用户
+    public UserDTO findUserByUsername(String username){
+        UserDTO userDTO = new UserDTO();
+        User user = userMapper.selectByName(username);
+        if(user != null){
+            userDTO.setId(user.getId());
+            userDTO.setUsername(user.getUsername());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setType(user.getType());
+            userDTO.setStatus(user.getStatus());
+            userDTO.setCreateTime(user.getCreateTime());
+            userDTO.setHeaderUrl(user.getHeaderUrl());
+            userDTO.setActivationCode(user.getActivationCode());
         }
         return userDTO;
     }
@@ -80,6 +98,8 @@ public class UserService {
         }
         // 注册用户
         User user = new User();
+        user.setUsername(username);
+        user.setEmail(email);
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
         user.setPassword(CommunityUtil.Md5(user.getPassword() + user.getSalt()));
         user.setCreateTime(new Date());
@@ -89,12 +109,22 @@ public class UserService {
         user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         userMapper.insertUser(user);
 
-        // 激活邮件
-        Context context = new Context();
-        context.setVariable("email", user.getEmail());
-        context.setVariable("url",domain + "/activation/" + user.getId() + "/" + user.getActivationCode());
-        String content = templateEngine.process("/mail/activation", context);
-        mailClient.sendMail(user.getEmail(), "激活账号", content);
+
         return map;
+    }
+
+    // 激活用户
+    // 激活
+    public int activation(int userId, String activationCode){
+        User user = userMapper.selectById(userId);
+        if(user.getStatus() == 1){
+            return REGISTER_REPEAT;
+        }else if(user.getActivationCode().equals(activationCode)){
+            userMapper.updateStatus(userId, 1);
+//            clearCache(userId);
+            return REGISTER_SUCCESS;
+        }else {
+            return REGISTER_FAILURE;
+        }
     }
 }

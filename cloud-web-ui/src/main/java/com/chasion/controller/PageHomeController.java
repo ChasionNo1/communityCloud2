@@ -1,11 +1,11 @@
-package com.chasion.cloudwebui.controller;
+package com.chasion.controller;
 
 
-import com.chasion.cloudcommonsapi.apis.DiscussPostFeignApi;
-import com.chasion.cloudcommonsapi.apis.UserFeignApi;
-import com.chasion.cloudcommonsapi.entity.DiscussPostDTO;
-import com.chasion.cloudcommonsapi.entity.Page;
-import com.chasion.cloudcommonsapi.resp.ResultData;
+import com.chasion.apis.DiscussPostFeignApi;
+import com.chasion.apis.UserFeignApi;
+import com.chasion.entity.DiscussPostDTO;
+import com.chasion.entity.Page;
+import com.chasion.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

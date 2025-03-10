@@ -1,4 +1,4 @@
-package com.chasion.clouduser.entity;
+package com.chasion.entity;
 
 import lombok.Data;
 

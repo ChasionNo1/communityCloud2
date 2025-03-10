@@ -1,4 +1,4 @@
-package com.chasion.cloudcommonsapi.utils;
+package com.chasion.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;

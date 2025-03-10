@@ -7,11 +7,69 @@
     <groupId>com.chasion</groupId>
     <artifactId>communityCloud2</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>cloud-commons-api</module>
+        <module>cloud-gateway</module>
+        <module>cloud-post</module>
+        <module>cloud-user</module>
+        <module>cloud-web-ui</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>3.0.2</spring.boot.version>
+        <spring-cloud.version>2022.0.0</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
+        <mybatis.springboot.version>3.0.2</mybatis.springboot.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
-    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--SpringBoot集成mybatis-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.springboot.version}</version>
+            </dependency>
+            <!--Mysql数据库驱动8 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <!--SpringBoot集成druid连接池-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
 </project>

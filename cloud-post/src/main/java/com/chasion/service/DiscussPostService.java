@@ -1,8 +1,8 @@
-package com.chasion.cloudpost.service;
+package com.chasion.service;
 
-import com.chasion.cloudcommonsapi.entity.DiscussPostDTO;
-import com.chasion.cloudpost.dao.DiscussPostMapper;
-import com.chasion.cloudpost.entity.DiscussPost;
+import com.chasion.entity.DiscussPostDTO;
+import com.chasion.dao.DiscussPostMapper;
+import com.chasion.entity.DiscussPost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;

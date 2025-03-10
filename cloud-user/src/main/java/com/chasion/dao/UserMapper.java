@@ -1,6 +1,6 @@
-package com.chasion.clouduser.dao;
+package com.chasion.dao;
 
-import com.chasion.clouduser.entity.User;
+import com.chasion.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

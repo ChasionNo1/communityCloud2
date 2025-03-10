@@ -1,4 +1,4 @@
-package com.chasion.cloudcommonsapi.entity;
+package com.chasion.entity;
 
 import lombok.Data;
 
@@ -13,4 +13,5 @@ public class UserDTO {
     private int status;
     private String headerUrl;
     private Date createTime;
+    private String activationCode;
 }

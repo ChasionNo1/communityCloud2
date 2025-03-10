@@ -1,6 +1,6 @@
-package com.chasion.cloudpost.dao;
+package com.chasion.dao;
 
-import com.chasion.cloudpost.entity.DiscussPost;
+import com.chasion.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
