@@ -1,0 +1,10 @@
+server:
+  port: 82
+spring:
+  application:
+    name: cloud-user
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848

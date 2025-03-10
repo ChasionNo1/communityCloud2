@@ -1,0 +1,25 @@
+server:
+  port: 8005
+spring:
+  application:
+    name: cloud-gateway
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    gateway:
+      routes:
+        - id: web-ui
+          uri: lb://web-ui
+          predicates:
+            - Path=/index
+          filters:
+            - AddRequestParameter=id,1
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE   # 打印详细的网关路由和过滤信息
+    reactor.netty.http.client: DEBUG          # 查看下游服务请求日志
+
+
+
