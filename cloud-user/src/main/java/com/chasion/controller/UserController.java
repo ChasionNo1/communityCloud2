@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/userService")
@@ -66,6 +67,24 @@ public class UserController {
             resultData.setData(activationStatus);
         }
         return resultData;
+    }
+
+    // 登录请求
+    @PostMapping("/login")
+    public ResultData<Map<String, Object>> login(@RequestParam("username") String username,
+                                    @RequestParam("password") String password,
+                                    @RequestParam("expired") int expired) {
+        Map<String, Object> map = userService.login(username, password, expired);
+        ResultData<Map<String, Object>> resultData = new ResultData<>();
+        resultData.setData(map);
+        return resultData;
+    }
+
+    // 退出登录
+    @GetMapping("/logout")
+    public String logout(@RequestParam("ticket") String ticket) {
+        userService.logout(ticket);
+        return "ok";
     }
 
 

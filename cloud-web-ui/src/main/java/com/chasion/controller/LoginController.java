@@ -1,5 +1,7 @@
 package com.chasion.controller;
 
+import com.chasion.apis.UserFeignApi;
+import com.chasion.resp.ResultData;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
 import com.google.code.kaptcha.Producer;
@@ -30,6 +32,9 @@ public class LoginController {
     @Autowired
     private Producer captchaProducer;
 
+    @Autowired
+    private UserFeignApi userFeignApi;
+
 
     // 响应登录页面
     @GetMapping("/login")
@@ -43,16 +48,16 @@ public class LoginController {
     // 处理登录请求
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model, String username, String password, String code, boolean rememberMe,
-                        javax.servlet.http.HttpSession session, javax.servlet.http.HttpServletResponse response, @CookieValue("kaptchaOwner") String kaptchaOwner) {
+                        HttpSession session, HttpServletResponse response, @CookieValue("kaptchaOwner") String kaptchaOwner) {
         // 验证码在客户获取登录页面的时候加载，信息已经存入到session中，
         // 此时需要将客户从前端页面中输入的验证码和session中取到的验证码进行对比
-//        String serverKaptcha = (String)session.getAttribute("captcha");
+        String serverKaptcha = (String)session.getAttribute("captcha");
         // 重构：从redis里取验证码
-        String serverKaptcha = null;
-        if (StringUtils.isNotBlank(kaptchaOwner)){
-            String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
-            serverKaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
-        }
+//        String serverKaptcha = null;
+//        if (StringUtils.isNotBlank(kaptchaOwner)){
+//            String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+//            serverKaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
+//        }
 
 
         // 验证码不正确，页面需要回填数据，重新填写验证码即可
@@ -63,10 +68,13 @@ public class LoginController {
 
         // 账号，密码验证
         int expired = rememberMe ? CommunityConstant.REMEMBER_EXPIRATION_TIME : CommunityConstant.DEFAULT_EXPIRATION_TIME;
-        Map<String, Object> map = userService.login(username, password, expired);
+        // 修改：调用userFeignApi实现登录
+
+        ResultData<Map<String, Object>> login = userFeignApi.login(username, password, expired);
+        Map<String, Object> map = login.getData();
         if (map.containsKey("ticket")){
             // 登录 成功
-            javax.servlet.http.Cookie cookie = new javax.servlet.http.Cookie("ticket", map.get("ticket").toString());
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
             cookie.setPath("/");
             cookie.setMaxAge(expired);
             response.addCookie(cookie);
@@ -109,5 +117,13 @@ public class LoginController {
         }catch (IOException e){
             logger.error("响应验证码失败:" + e.getMessage());
         }
+    }
+
+    // 退出登录
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public String logout(@CookieValue("ticket") String ticket) {
+        userFeignApi.logout(ticket);
+//        SecurityContextHolder.clearContext();
+        return "redirect:/login";
     }
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8005
+  port: 8080
 spring:
   application:
     name: cloud-gateway
@@ -10,12 +10,10 @@ spring:
         server-addr: localhost:8848
     gateway:
       routes:
-        - id: web-ui
-          uri: lb://web-ui
+        - id: cloud-web-ui
+          uri: lb://cloud-web-ui
           predicates:
             - Path=/index
-          filters:
-            - AddRequestParameter=id,1
 logging:
   level:
     org.springframework.cloud.gateway: TRACE   # 打印详细的网关路由和过滤信息

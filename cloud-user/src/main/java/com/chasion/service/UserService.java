@@ -1,5 +1,7 @@
 package com.chasion.service;
 
+import com.chasion.dao.LoginTicketMapper;
+import com.chasion.entity.LoginTicket;
 import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
@@ -15,6 +17,7 @@ import org.thymeleaf.context.Context;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -24,13 +27,7 @@ public class UserService implements CommunityConstant {
     private UserMapper userMapper;
 
     @Autowired
-    private TemplateEngine templateEngine;
-
-    @Autowired
-    private MailClient mailClient;
-
-    @Value("${domain}")
-    private String domain;
+    private LoginTicketMapper loginTicketMapper;
 
     // 根据用户id查询用户名
     public UserDTO findUserById(int id){
@@ -109,7 +106,6 @@ public class UserService implements CommunityConstant {
         user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
         userMapper.insertUser(user);
 
-
         return map;
     }
 
@@ -126,5 +122,73 @@ public class UserService implements CommunityConstant {
         }else {
             return REGISTER_FAILURE;
         }
+    }
+
+    // 登录行为
+    public Map<String, Object> login(String username, String password, long expired){
+        HashMap<String, Object> map = new HashMap<>();
+        // 校验
+        if (StringUtils.isBlank(username)){
+            map.put("usernameMsg", "账号不能为空");
+            return map;
+        }else if (StringUtils.isBlank(password)){
+            map.put("passwordMsg", "密码不能为空");
+            return map;
+        }
+        // 登录失败
+        // 登录成功
+        User user = userMapper.selectByName(username);
+        // 用户是否存在？
+        if (user == null){
+            map.put("usernameMsg", "用户不存在");
+            return map;
+        }else {
+            // 用户存在
+            // 是否激活
+            if (user.getStatus() == 0){
+                map.put("usernameMsg", "账号未激活");
+                return map;
+            }
+            // 对比密码，密码是如何设置的？
+            //  user.setPassword(CommunityUtil.Md5(user.getPassword() + user.getSalt()));
+            // 用户输入的是明文密码
+            String inputPassword = CommunityUtil.Md5(password + user.getSalt());
+            String savePassword = user.getPassword();
+            System.out.println("inputPassword:"+inputPassword);
+            System.out.println("savePassword:"+savePassword);
+            if (!savePassword.equals(inputPassword)){
+                // 密码不正确
+                map.put("passwordMsg", "密码不正确");
+                return map;
+            }else {
+                map.put("passwordMsg", "密码正确");
+                // 登录成功，设置登录凭证
+                LoginTicket loginTicket = new LoginTicket();
+                loginTicket.setUserId(user.getId());
+                // 登录成功状态为0
+                loginTicket.setStatus(0);
+                loginTicket.setTicket(CommunityUtil.generateUUID());
+                loginTicket.setExpired(new Date(System.currentTimeMillis() + expired));
+                // 保存凭证到redis里
+//                String ticketKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
+//                redisTemplate.opsForValue().set(ticketKey, loginTicket);
+                loginTicketMapper.insertLoginTicket(loginTicket);
+                // 给客户发送ticket
+                map.put("ticket", loginTicket.getTicket());
+            }
+        }
+        return map;
+    }
+
+    // 退出登录
+    public void logout(String ticket){
+        // 在redis里的
+//        String ticketKey = RedisKeyUtil.getTicketKey(ticket);
+//        LoginTicket loginTicket = (LoginTicket) redisTemplate.opsForValue().get(ticketKey);
+//        loginTicket.setStatus(1);
+//        redisTemplate.opsForValue().set(ticketKey, loginTicket);
+
+        // 在mysql里的，更新状态就完事了
+        loginTicketMapper.updateLoginTicket(ticket, 1);
     }
 }

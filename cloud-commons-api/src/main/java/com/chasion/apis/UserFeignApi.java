@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @FeignClient(name = "cloud-user")
 public interface UserFeignApi {
@@ -26,4 +27,12 @@ public interface UserFeignApi {
 
     @GetMapping("/userService/activation/{userId}/{code}")
     public ResultData<Integer> activation(@PathVariable("userId") int userId, @PathVariable("code") String code);
+
+    @PostMapping("/userService/login")
+    public ResultData<Map<String, Object>> login(@RequestParam("username") String username,
+                                                 @RequestParam("password") String password,
+                                                 @RequestParam("expired") int expired);
+
+    @GetMapping("/userService/logout")
+    public String logout(@RequestParam("ticket") String ticket);
 }
