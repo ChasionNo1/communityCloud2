@@ -13,7 +13,7 @@ spring:
         - id: cloud-web-ui
           uri: lb://cloud-web-ui
           predicates:
-            - Path=/index
+            - Path=/**
 logging:
   level:
     org.springframework.cloud.gateway: TRACE   # 打印详细的网关路由和过滤信息

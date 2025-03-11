@@ -3,6 +3,7 @@ package com.chasion.apis;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
 import com.chasion.entity.UserDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,4 +36,8 @@ public interface UserFeignApi {
 
     @GetMapping("/userService/logout")
     public String logout(@RequestParam("ticket") String ticket);
+
+    // 暂时不用这个
+//    @GetMapping("//userService/verify/ticket")
+//    public String verifyTicket(@RequestBody HttpServletRequest request);
 }

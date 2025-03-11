@@ -1,12 +1,16 @@
 package com.chasion.controller;
 
+import com.chasion.entity.LoginTicket;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
 import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.UserService;
+import com.chasion.utils.CookieUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,6 +90,21 @@ public class UserController {
         userService.logout(ticket);
         return "ok";
     }
+
+    // 暂时不用这个
+//    // 验证登录凭证的有效性
+//    @GetMapping("/verify/ticket")
+//    public String verifyTicket(@RequestBody HttpServletRequest request) {
+//        String ticket = CookieUtil.getValue(request, "ticket");
+//        if (ticket != null) {
+//            LoginTicket loginTicket = userService.getLoginTicket(ticket);
+//            // 判断当前凭证的有效性
+//            if (loginTicket != null &&loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date())) {
+//                return ticket;
+//            }
+//        }
+//        return null;
+//    }
 
 
 

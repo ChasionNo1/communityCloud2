@@ -191,4 +191,11 @@ public class UserService implements CommunityConstant {
         // 在mysql里的，更新状态就完事了
         loginTicketMapper.updateLoginTicket(ticket, 1);
     }
+
+    // 获取用户的登录凭证
+    public LoginTicket getLoginTicket(String ticket){
+//        String ticketKey = RedisKeyUtil.getTicketKey(ticket);
+//        return (LoginTicket) redisTemplate.opsForValue().get(ticketKey);
+        return loginTicketMapper.selectLoginTicket(ticket);
+    }
 }
