@@ -37,7 +37,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
             ResultData<LoginTicketDTO> resultData = userFeignApi.getTicket(ticket);
             LoginTicketDTO loginTicketDTO = resultData.getData();
 //             当前凭证的有效性
-            if (loginTicketDTO!=null && loginTicketDTO.getStatus() == 0 && loginTicketDTO.getExpired().after(new Date())){
+            if (loginTicketDTO != null && loginTicketDTO.getStatus() == 0 && loginTicketDTO.getExpired().after(new Date())){
 //                 利用凭证查询user
                 UserDTO user = userFeignApi.findUserById(loginTicketDTO.getUserId());
                 // 在本次请求中持有用户

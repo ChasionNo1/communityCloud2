@@ -1,6 +1,5 @@
 package com.chasion.controller;
 
-import ch.qos.logback.core.model.Model;
 import com.chasion.apis.UserFeignApi;
 import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityUtil;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +44,7 @@ public class SettingController {
     @Autowired
     private UserFeignApi userFeignApi;
 
-    // 相应页面
+    // 响应页面
     @GetMapping("/user/setting")
     public String getSettingPage(Model model) {
         return "site/setting";
@@ -53,7 +53,7 @@ public class SettingController {
     // 处理上传头像的请求
     // 改用云服务器的对象存储，此方法废弃
     @RequestMapping(value = "/user/upload", method = RequestMethod.POST)
-    public String upload(@RequestParam("headerImage") MultipartFile headerImage, org.springframework.ui.Model model) {
+    public String upload(@RequestParam("headerImage") MultipartFile headerImage, Model model) {
         if (headerImage == null) {
             model.addAttribute("error", "Please select a file.");
             return "/site/setting";
