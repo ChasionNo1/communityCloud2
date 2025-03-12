@@ -1,43 +1,49 @@
 package com.chasion.apis;
 
+import com.chasion.entity.LoginTicketDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
-import com.chasion.entity.UserDTO;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@FeignClient(name = "cloud-user")
+@FeignClient(name = "cloud-user", path = "/userService")
 public interface UserFeignApi {
 
-    @GetMapping("/userService/getUser/id/{id}")
-    @ResponseBody
+    @GetMapping("/getUser/id/{id}")
     public UserDTO findUserById(@PathVariable("id") int id);
 
-    @PostMapping("/userService/register")
-    @ResponseBody
+    @PostMapping("/register")
     public ResultData<HashMap<String, Object>> register(@RequestParam("username") String username,
                                                         @RequestParam("password") String password,
                                                         @RequestParam("email") String email);
 
-    @GetMapping("/userService/getUser/username/{username}")
+    @GetMapping("/getUser/username/{username}")
     public UserDTO findUserByUsername(@PathVariable("username") String username);
 
-    @GetMapping("/userService/activation/{userId}/{code}")
+    @GetMapping("/activation/{userId}/{code}")
     public ResultData<Integer> activation(@PathVariable("userId") int userId, @PathVariable("code") String code);
 
-    @PostMapping("/userService/login")
+    @PostMapping("/login")
     public ResultData<Map<String, Object>> login(@RequestParam("username") String username,
                                                  @RequestParam("password") String password,
                                                  @RequestParam("expired") int expired);
 
-    @GetMapping("/userService/logout")
+    @GetMapping("/logout")
     public String logout(@RequestParam("ticket") String ticket);
 
-    // 暂时不用这个
-//    @GetMapping("//userService/verify/ticket")
-//    public String verifyTicket(@RequestBody HttpServletRequest request);
+
+    @GetMapping("/get/loginTicket")
+    public ResultData<LoginTicketDTO> getTicket(@RequestParam("ticket") String ticket);
+
+    @PostMapping("/update/headerUrl")
+    public ResultData<String> updateHeaderUrl(@RequestParam("userId") int userId, @RequestParam("headerUrl") String headerUrl);
+
+    @PostMapping("/update/password")
+    public ResultData<Map<String, Object>> updatePassword(@RequestParam("userId") int userId,
+                                                          @RequestParam("oldPassword") String oldPassword,
+                                                          @RequestParam("newPassword") String newPassword,
+                                                          @RequestParam("confirmPassword") String confirmPassword);
 }

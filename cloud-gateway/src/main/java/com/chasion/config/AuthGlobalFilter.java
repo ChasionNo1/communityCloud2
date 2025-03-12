@@ -1,7 +1,6 @@
 package com.chasion.config;
 
 import com.chasion.apis.UserFeignApi;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

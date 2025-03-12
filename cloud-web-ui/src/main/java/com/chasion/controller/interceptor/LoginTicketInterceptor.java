@@ -1,29 +1,29 @@
 package com.chasion.controller.interceptor;
 
-import com.chasion.community.entity.LoginTicket;
-import com.chasion.community.entity.User;
-import com.chasion.community.service.UserService;
-import com.chasion.community.util.CookieUtil;
-import com.chasion.community.util.HostHolder;
+import com.chasion.apis.UserFeignApi;
+import com.chasion.entity.LoginTicketDTO;
+import com.chasion.entity.UserDTO;
+import com.chasion.resp.ResultData;
+import com.chasion.utils.CookieUtil;
+import com.chasion.utils.HostHolder;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @Component
 public class LoginTicketInterceptor implements HandlerInterceptor {
 
-    @Autowired
-    private UserService userService;
     // 在请求开始处理之前，获取ticket
+
+    @Lazy
+    @Autowired
+    private UserFeignApi userFeignApi;
 
     @Autowired
     private HostHolder hostHolder;
@@ -34,17 +34,18 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
         String ticket = CookieUtil.getValue(request, "ticket");
         if (ticket != null){
             // 查询凭证
-            LoginTicket loginTicket = userService.getLoginTicket(ticket);
-            // 当前凭证的有效性
-            if (loginTicket != null && loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date())){
-                // 利用凭证查询user
-                User user = userService.findUserById(loginTicket.getUserId());
+            ResultData<LoginTicketDTO> resultData = userFeignApi.getTicket(ticket);
+            LoginTicketDTO loginTicketDTO = resultData.getData();
+//             当前凭证的有效性
+            if (loginTicketDTO!=null && loginTicketDTO.getStatus() == 0 && loginTicketDTO.getExpired().after(new Date())){
+//                 利用凭证查询user
+                UserDTO user = userFeignApi.findUserById(loginTicketDTO.getUserId());
                 // 在本次请求中持有用户
                 hostHolder.setUser(user);
                 // 构建用户的认证结果，并存入SecurityContext，以便于Security进行授权
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        user, user.getPassword(), userService.getAuthorities(user.getId()));
-                SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
+//                Authentication authentication = new UsernamePasswordAuthenticationToken(
+//                        user, user.getPassword(), userService.getAuthorities(user.getId()));
+//                SecurityContextHolder.setContext(new SecurityContextImpl(authentication));
             }
         }
 
@@ -53,7 +54,7 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        User user = hostHolder.getUser();
+        UserDTO user = hostHolder.getUser();
         if(user != null && modelAndView != null){
             modelAndView.addObject("loginUser", user);
         }
@@ -62,6 +63,6 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         hostHolder.clear();
-        SecurityContextHolder.clearContext();
+//        SecurityContextHolder.clearContext();
     }
 }

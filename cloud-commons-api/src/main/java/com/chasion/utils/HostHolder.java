@@ -1,17 +1,17 @@
 package com.chasion.utils;
 
-import com.chasion.entity.User;
+import com.chasion.entity.UserDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HostHolder {
 
     // 持有用户信息，用于代替session对象
-    private ThreadLocal<User> users = new ThreadLocal<>();
-    public void setUser(User user) {
+    private ThreadLocal<UserDTO> users = new ThreadLocal<>();
+    public void setUser(UserDTO user) {
         users.set(user);
     }
-    public User getUser(){
+    public UserDTO getUser(){
         return users.get();
     }
 

@@ -75,6 +75,7 @@ public class RegisterController implements CommunityConstant {
     }
 
     // 激活链接请求
+    // 这里的激活，不应该带这些参数的，userId，太明显了
     @RequestMapping(path = "/activation/{userId}/{code}", method = RequestMethod.GET)
     public String activation(Model model, @PathVariable("userId") int userId, @PathVariable("code") String code) {
         // 通过openfeign调用user服务

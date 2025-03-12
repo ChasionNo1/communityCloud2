@@ -1,11 +1,11 @@
 package com.chasion.controller;
 
 import com.chasion.entity.LoginTicket;
+import com.chasion.entity.LoginTicketDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
 import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.UserService;
-import com.chasion.utils.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -91,21 +91,49 @@ public class UserController {
         return "ok";
     }
 
-    // 暂时不用这个
-//    // 验证登录凭证的有效性
-//    @GetMapping("/verify/ticket")
-//    public String verifyTicket(@RequestBody HttpServletRequest request) {
-//        String ticket = CookieUtil.getValue(request, "ticket");
-//        if (ticket != null) {
-//            LoginTicket loginTicket = userService.getLoginTicket(ticket);
-//            // 判断当前凭证的有效性
-//            if (loginTicket != null &&loginTicket.getStatus() == 0 && loginTicket.getExpired().after(new Date())) {
-//                return ticket;
-//            }
-//        }
-//        return null;
-//    }
 
+    // 验证登录ticket的有效性
+    @GetMapping("/get/loginTicket")
+    public ResultData<LoginTicketDTO> getTicket(@RequestParam("ticket") String ticket) {
+        ResultData<LoginTicketDTO> resultData = new ResultData<>();
+        LoginTicketDTO loginTicket = userService.getLoginTicket(ticket);
+        if (loginTicket == null) {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage("没有获取到ticket");
+        }else {
+            resultData.setData(loginTicket);
+        }
+        return resultData;
+    }
+
+    // 更新头像地址
+    @PostMapping("/update/headerUrl")
+    public ResultData<String> updateHeaderUrl(@RequestParam("userId") int userId, @RequestParam("headerUrl") String headerUrl) {
+        int i = userService.updateHeader(userId, headerUrl);
+        ResultData<String> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        return resultData;
+    }
+
+    // 修改密码  user.getId(), oldPassword, newPassword, confirmPassword
+    @PostMapping("/update/password")
+    public ResultData<Map<String, Object>> updatePassword(@RequestParam("userId") int userId,
+                                             @RequestParam("oldPassword") String oldPassword,
+                                             @RequestParam("newPassword") String newPassword,
+                                             @RequestParam("confirmPassword") String confirmPassword) {
+        Map<String, Object> map = userService.updatePassword(userId, oldPassword, newPassword, confirmPassword);
+        ResultData<Map<String, Object>> resultData = new ResultData<>();
+        if (map == null || map.isEmpty()) {
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage("密码修改成功!");
+            resultData.setData(map);
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage("密码修改失败!");
+            resultData.setData(map);
+        }
+        return resultData;
+    }
 
 
 }

@@ -2,6 +2,7 @@ package com.chasion.service;
 
 import com.chasion.dao.LoginTicketMapper;
 import com.chasion.entity.LoginTicket;
+import com.chasion.entity.LoginTicketDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
@@ -98,7 +99,7 @@ public class UserService implements CommunityConstant {
         user.setUsername(username);
         user.setEmail(email);
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
-        user.setPassword(CommunityUtil.Md5(user.getPassword() + user.getSalt()));
+        user.setPassword(CommunityUtil.Md5(password + user.getSalt()));
         user.setCreateTime(new Date());
         user.setType(0);
         user.setStatus(0);
@@ -193,9 +194,75 @@ public class UserService implements CommunityConstant {
     }
 
     // 获取用户的登录凭证
-    public LoginTicket getLoginTicket(String ticket){
+    public LoginTicketDTO getLoginTicket(String ticket){
 //        String ticketKey = RedisKeyUtil.getTicketKey(ticket);
 //        return (LoginTicket) redisTemplate.opsForValue().get(ticketKey);
-        return loginTicketMapper.selectLoginTicket(ticket);
+        LoginTicketDTO loginTicketDTO = new LoginTicketDTO();
+        LoginTicket loginTicket = loginTicketMapper.selectLoginTicket(ticket);
+        if(loginTicket != null){
+            loginTicketDTO.setTicket(loginTicket.getTicket());
+            loginTicketDTO.setUserId(loginTicket.getUserId());
+            loginTicketDTO.setStatus(loginTicket.getStatus());
+            loginTicketDTO.setExpired(loginTicket.getExpired());
+            loginTicketDTO.setId(loginTicket.getId());
+        }
+        return loginTicketDTO;
+    }
+
+    // 更新用户头像地址
+    // 更新头像
+    public int updateHeader(int userId, String headerUrl){
+        int i = userMapper.updateHeader(userId, headerUrl);
+//        clearCache(userId);
+        return i;
+    }
+
+    /**
+     *   修改密码
+     *   前端输入：原始密码，新密码和确认密码
+     *   原始密码要和数据库中的密码进行校验
+     *
+     * */
+    public Map<String, Object> updatePassword(int userId, String oldPassword, String newPassword, String confirmPassword){
+//        System.out.println("oldPassword:"+oldPassword);
+//        System.out.println("newPassword:"+newPassword);
+//        System.out.println("confirmPassword:"+confirmPassword);
+        HashMap<String, Object> map = new HashMap<>();
+        // 对传入的参数进行校验
+        if (StringUtils.isBlank(oldPassword)){
+            map.put("oldPasswordMsg", "原始密码为空");
+            return map;
+        }else if (StringUtils.isBlank(newPassword)){
+            map.put("newPasswordMsg", "新密码为空");
+            return map;
+        }else if (StringUtils.isBlank(confirmPassword)){
+            map.put("confirmPasswordMsg", "确认密码为空");
+            return map;
+        }
+        // 前端页面校验
+//        if (oldPassword.length() < 8){
+//            map.put("oldPasswordMsg", "密码长度小于8");
+//            return map;
+//        }
+//        if (newPassword.length() < 8){
+//            map.put("newPasswordMsg", "密码长度小于8");
+//            return map;
+//        }
+        // 根据id取用用户        ？用户校验，此时是登录状态，所以用户是存在的
+        User user = userMapper.selectById(userId);
+        // 取数据库中的用户密码
+        String password = user.getPassword();
+        oldPassword = CommunityUtil.Md5(oldPassword + user.getSalt());
+        if (password.equals(oldPassword)){
+            // 与用户输入原始密码一致，进行修改，这里一般都有验证码的要求
+            if (newPassword.equals(confirmPassword)){
+                userMapper.updatePassword(userId,CommunityUtil.Md5(newPassword + user.getSalt()));
+//                clearCache(userId);
+            }else {
+                map.put("confirmPasswordMsg", "两次密码输入不一致");
+            }
+
+        }
+        return map;
     }
 }
