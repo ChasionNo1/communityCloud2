@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "cloud-post")
+@FeignClient(name = "cloud-post", path = "discussPost")
 public interface DiscussPostFeignApi {
 
-    @GetMapping("/discussPost/count")
+    @GetMapping("/get/count")
     public int discussPostCount();
 
-    @PostMapping("/discussPost/list")
+    @PostMapping("/get/list")
     public ResultData<List<DiscussPostDTO>> discussPosts(@RequestBody Page page, @RequestParam("orderMode") int orderMode);
+
+    @PostMapping("/add/discussPost")
+    public ResultData<String> addDiscussPost(@RequestParam("userId") int userId, @RequestParam("title") String title, @RequestParam("content") String content);
 
 
 }

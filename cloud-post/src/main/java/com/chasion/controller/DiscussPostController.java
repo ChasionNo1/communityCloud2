@@ -22,22 +22,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@Controller
+@RestController
+@RequestMapping("/discussPost")
 public class DiscussPostController{
 
     @Autowired
     private DiscussPostService discussPostService;
 
     // 查询帖子总数，用于分页查询
-    @GetMapping("/discussPost/count")
-    @ResponseBody
+    @GetMapping("/get/count")
     public int discussPostCount(){
         return discussPostService.findDiscussPostRows(0);
     }
 
     // 返回首页帖子数据 DTO
-    @PostMapping("/discussPost/list")
-    @ResponseBody
+    @PostMapping("/get/list")
     public ResultData<List<DiscussPostDTO>> discussPosts(@RequestBody Page page, @RequestParam("orderMode") int orderMode) {
         // 返回要查询的数据，带分页信息，定义一个返回数据接口
         // 查询分页数据
@@ -51,6 +50,15 @@ public class DiscussPostController{
         }
         return resultData;
     }
+
+    // 增加帖子
+    @PostMapping("/add/discussPost")
+    public ResultData<String> addDiscussPost(@RequestParam("userId") int userId, @RequestParam("title") String title, @RequestParam("content") String content) {
+        discussPostService.addDiscussPost(userId, title, content);
+        return new ResultData<>();
+    }
+
+
 
 
 //    @Autowired

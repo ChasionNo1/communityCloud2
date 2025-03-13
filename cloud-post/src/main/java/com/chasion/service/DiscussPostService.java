@@ -3,11 +3,15 @@ package com.chasion.service;
 import com.chasion.entity.DiscussPostDTO;
 import com.chasion.dao.DiscussPostMapper;
 import com.chasion.entity.DiscussPost;
+import com.chasion.entity.UserDTO;
+import com.chasion.utils.HostHolder;
+import com.chasion.utils.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,8 +20,9 @@ public class DiscussPostService {
     @Autowired
     private DiscussPostMapper discussPostMapper;
 
-//    @Autowired
-//    private SensitiveFilter sensitiveFilter;
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
 
     // 查询分页数据  这里带userId是为了后面查看个人用户发的帖子
     public List<DiscussPostDTO> findDiscussPosts(int userId, int offset, int limit, int orderMode){
@@ -83,6 +88,18 @@ public class DiscussPostService {
 
     public int updateDiscussPostScore(int id, double score){
         return discussPostMapper.updateDiscussPostScore(id,score);
+    }
+
+    // 增加帖子
+    public int addDiscussPost(int userId, String title, String content){
+        DiscussPost discussPost = new DiscussPost();
+        // 获取发表人的id
+        discussPost.setUserId(userId);
+        discussPost.setTitle(sensitiveFilter.filter(HtmlUtils.htmlEscape(title)));
+        discussPost.setContent(sensitiveFilter.filter(HtmlUtils.htmlEscape(content)));
+        discussPost.setCreateTime(new Date());
+        return discussPostMapper.insertDiscussPost(discussPost);
+
     }
 
 }
