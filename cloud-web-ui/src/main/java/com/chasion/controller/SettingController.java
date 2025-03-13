@@ -145,11 +145,7 @@ public class SettingController {
         }
     }
 
-    // 忘记密码
-    @GetMapping("/user/forget")
-    public String getForgetPage(Model model) {
-        return "site/forget";
-    }
+
 
 
 }

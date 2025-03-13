@@ -46,4 +46,10 @@ public interface UserFeignApi {
                                                           @RequestParam("oldPassword") String oldPassword,
                                                           @RequestParam("newPassword") String newPassword,
                                                           @RequestParam("confirmPassword") String confirmPassword);
+
+    @GetMapping("/check/email")
+    public ResultData<String> checkEmail(@RequestParam("email") String email);
+
+    @PostMapping("/forget/password")
+    public ResultData<String> forgetPassword(@RequestParam("email") String email, @RequestParam("password")String password);
 }

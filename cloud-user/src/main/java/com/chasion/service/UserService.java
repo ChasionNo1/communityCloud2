@@ -10,6 +10,7 @@ import com.chasion.utils.MailClient;
 import com.chasion.dao.UserMapper;
 import com.chasion.entity.User;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -155,8 +156,8 @@ public class UserService implements CommunityConstant {
             // 用户输入的是明文密码
             String inputPassword = CommunityUtil.Md5(password + user.getSalt());
             String savePassword = user.getPassword();
-            System.out.println("inputPassword:"+inputPassword);
-            System.out.println("savePassword:"+savePassword);
+//            System.out.println("inputPassword:"+inputPassword);
+//            System.out.println("savePassword:"+savePassword);
             if (!savePassword.equals(inputPassword)){
                 // 密码不正确
                 map.put("passwordMsg", "密码不正确");
@@ -264,5 +265,34 @@ public class UserService implements CommunityConstant {
 
         }
         return map;
+    }
+
+    // 邮箱校验
+    public Map<String, Object> checkEmail(String email){
+        HashMap<String, Object> map = new HashMap<>();
+        if (email == null ||StringUtils.isBlank(email)){
+            map.put("msg", "邮箱不能为空!");
+            return map;
+        }
+        User user = userMapper.selectByEmail(email);
+        if (user == null){
+            map.put("msg", "用户不存在!");
+            return map;
+        }
+        return map;
+    }
+
+    // 忘记密码，修改密码
+    public Map<String, Object> forgetPassword(String email, String password){
+        HashMap<String, Object> map = new HashMap<>();
+        // 邮箱已经校验过了
+        User user = userMapper.selectByEmail(email);
+        if (user == null){
+            map.put("msg", "找不到该用户!");
+        }else {
+            userMapper.updatePassword(user.getId(), CommunityUtil.Md5(password + user.getSalt()));
+        }
+        return map;
+
     }
 }

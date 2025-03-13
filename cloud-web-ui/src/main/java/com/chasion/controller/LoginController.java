@@ -2,8 +2,10 @@ package com.chasion.controller;
 
 import com.chasion.apis.UserFeignApi;
 import com.chasion.resp.ResultData;
+import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
+import com.chasion.utils.MailClient;
 import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -11,19 +13,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class LoginController {
@@ -34,6 +38,12 @@ public class LoginController {
 
     @Autowired
     private UserFeignApi userFeignApi;
+
+    @Autowired
+    private MailClient mailClient;
+
+    @Autowired
+    private TemplateEngine templateEngine;
 
 
     // 响应登录页面
@@ -125,5 +135,62 @@ public class LoginController {
         userFeignApi.logout(ticket);
 //        SecurityContextHolder.clearContext();
         return "redirect:/login";
+    }
+
+    // 忘记密码
+    @GetMapping("/user/forget")
+    public String getForgetPage(Model model) {
+        return "site/forget";
+    }
+
+    // 忘记密码-发送验证码
+    @PostMapping("/send/verifyCode")
+    @ResponseBody
+    public ResultData<String> forgetPassword(HttpSession session, @RequestParam("email") String email) {
+        // 开始响应通过邮件发送验证码
+        // 先查询这个邮件是否是存在用户，用户状态如何
+        ResultData<String> resultData = userFeignApi.checkEmail(email);
+        if (Objects.equals(resultData.getCode(), ReturnCodeEnum.RC200.getCode())){
+            // 如果验证成功就发送验证码
+            // 调用邮件发送功能：发送验证码
+            // 随机生成验证码
+            SecureRandom random = new SecureRandom();
+            int code = random.nextInt(900000) + 100000;
+            // 验证码还要放在session里
+            session.setAttribute("code", String.valueOf(code));
+            Context context = new Context();
+            context.setVariable("email", email);
+            context.setVariable("code", String.valueOf(code));
+            String content = templateEngine.process("/mail/forget", context);
+            mailClient.sendMail(email, "验证码", content);
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC500.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC500.getMessage());
+        }
+        return resultData;
+    }
+
+    // 响应忘记密码表单
+    @PostMapping("/password/forget")
+    public String forgetPassword(String email, String verifyCode, String newPassword, HttpSession session, Model model) {
+        // 接收表单数据，修改密码
+        String code = (String) session.getAttribute("code");
+        // 如果验证码不一致
+        if (!code.equals(verifyCode)){
+            model.addAttribute("verifyCodeMsg", "验证码有误!");
+            return "/site/forget";
+        }else {
+            // 验证码一致，调用user服务
+            ResultData<String> resultData = userFeignApi.forgetPassword(email, newPassword);
+            if (Objects.equals(resultData.getCode(), ReturnCodeEnum.RC200.getCode())){
+                // 直接跳转到登录页面
+                return "redirect:/login";
+            }else {
+                // 如果失败了，这里没有对密码进行校验，只是针对邮箱
+                model.addAttribute("emailMsg", "邮箱有误!");
+                // 继续在这个页面
+                return "/site/forget";
+            }
+        }
     }
 }

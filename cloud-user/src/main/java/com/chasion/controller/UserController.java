@@ -135,5 +135,38 @@ public class UserController {
         return resultData;
     }
 
+    // 检查用户邮箱情况
+    @GetMapping("/check/email")
+    public ResultData<String> checkAndSendEmail(@RequestParam("email") String email) {
+        Map<String, Object> map = userService.checkEmail(email);
+        ResultData<String> resultData = new ResultData<>();
+        if (map == null || map.isEmpty()) {
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage("该邮箱是合法用户");
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage(map.get("msg").toString());
+        }
+        return resultData;
+    }
+
+    // 忘记密码
+    @PostMapping("/forget/password")
+    public ResultData<String> forgetPassword(@RequestParam("email") String email, @RequestParam("password")String password) {
+        Map<String, Object> map = userService.forgetPassword(email, password);
+        ResultData<String> resultData = new ResultData<>();
+        if (map == null || map.isEmpty()) {
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage("修改成功!");
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage(map.get("msg").toString());
+        }
+        return resultData;
+    }
+
+
+
+
 
 }
