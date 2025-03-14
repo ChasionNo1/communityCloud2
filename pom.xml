@@ -14,6 +14,8 @@
         <module>cloud-post</module>
         <module>cloud-user</module>
         <module>cloud-web-ui</module>
+        <module>cloud-comment</module>
+        <module>cloud-message</module>
     </modules>
 
     <properties>

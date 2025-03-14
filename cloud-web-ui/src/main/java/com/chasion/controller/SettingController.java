@@ -98,7 +98,6 @@ public class SettingController {
     public void getHeader(@PathVariable String filename, HttpServletResponse response) {
         // 找到服务器存放的路径
         filename = uploadPath + "/" + filename;
-        System.out.println(filename);
         // 文件的后缀
         String suffix = filename.substring(filename.lastIndexOf("."));
         // 响应图片

@@ -4,10 +4,7 @@ import com.chasion.entity.DiscussPostDTO;
 import com.chasion.entity.Page;
 import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +20,6 @@ public interface DiscussPostFeignApi {
     @PostMapping("/add/discussPost")
     public ResultData<String> addDiscussPost(@RequestParam("userId") int userId, @RequestParam("title") String title, @RequestParam("content") String content);
 
-
+    @GetMapping("/get/discuss/{id}")
+    public DiscussPostDTO getDiscussPost(@PathVariable("id") int id);
 }

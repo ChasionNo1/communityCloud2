@@ -68,8 +68,23 @@ public class DiscussPostService {
     }
 
     // 查询一个帖子
-    public DiscussPost findDiscussPostById(int id){
-        return discussPostMapper.selectDiscussPostById(id);
+    public DiscussPostDTO findDiscussPostById(int id){
+        DiscussPostDTO discussPostDTO = new DiscussPostDTO();
+        DiscussPost discussPost = discussPostMapper.selectDiscussPostById(id);
+        if (discussPost != null){
+            discussPostDTO.setId(discussPost.getId());
+            discussPostDTO.setContent(discussPost.getContent());
+            discussPostDTO.setTitle(discussPost.getTitle());
+            discussPostDTO.setUserId(discussPost.getUserId());
+            discussPostDTO.setType(discussPost.getType());
+            discussPostDTO.setStatus(discussPost.getStatus());
+            discussPostDTO.setCreateTime(discussPost.getCreateTime());
+            discussPostDTO.setCommentCount(discussPost.getCommentCount());
+            discussPostDTO.setScore(discussPost.getScore());
+        }else {
+            throw new IllegalArgumentException("discussPost is null");
+        }
+        return discussPostDTO;
     }
 
     // 更新帖子的评论数量

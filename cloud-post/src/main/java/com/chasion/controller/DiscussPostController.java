@@ -58,6 +58,12 @@ public class DiscussPostController{
         return new ResultData<>();
     }
 
+    // 根据id查找帖子
+    @GetMapping("/get/discuss/{id}")
+    public DiscussPostDTO getDiscussPost(@PathVariable("id") int id) {
+        return discussPostService.findDiscussPostById(id);
+    }
+
 
 
 
