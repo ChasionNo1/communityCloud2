@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -29,9 +31,12 @@ public class MessageService {
         List<Message> conversations = messageMapper.getConversations(userId, offset, limit);
         List<MessageDTO> dtos = new ArrayList<>();
         for (Message conversation : conversations) {
-            MessageDTO dto = new MessageDTO();
-            BeanUtils.copyProperties(conversation, dto);
-            dtos.add(dto);
+            // 这里再计数数据也查了
+            MessageDTO messageDTO = new MessageDTO();
+            BeanUtils.copyProperties(conversation, messageDTO);
+            messageDTO.setUnreadLetterCount(getUnreadLetterCount(userId, messageDTO.getConversationId()));
+            messageDTO.setLetterCount(getLetterCount(messageDTO.getConversationId()));
+            dtos.add(messageDTO);
         }
         return dtos;
     }
@@ -60,21 +65,23 @@ public class MessageService {
         return messageMapper.getUnreadLetterCount(userId, conversationId);
     }
 
-    public int addMessage(Message message){
+    public int addMessage(MessageDTO messageDTO){
         // 过滤敏感词
-        message.setContent(HtmlUtils.htmlEscape(message.getContent()));
-        message.setContent(sensitiveFilter.filter(message.getContent()));
+        messageDTO.setContent(HtmlUtils.htmlEscape(messageDTO.getContent()));
+        messageDTO.setContent(sensitiveFilter.filter(messageDTO.getContent()));
+        Message message = new Message();
+        BeanUtils.copyProperties(messageDTO, message);
         return messageMapper.insertMessage(message);
     }
 
-    public int readMessage(List<Message> messages){
+    public int readMessage(List<MessageDTO> messages, int userId){
         // 获取未读letter的id
         ArrayList<Integer> ids = new ArrayList<>();
         if (messages != null && !messages.isEmpty()){
-            for (Message message :
+            for (MessageDTO message :
                     messages) {
                 // 如果当前登录的用户是接收者，且消息未读
-                if (hostHolder.getUser().getId() == message.getToId() && message.getStatus() == 0){
+                if (userId == message.getToId() && message.getStatus() == 0){
                     ids.add(message.getId());
                 }
             }
@@ -115,5 +122,10 @@ public class MessageService {
 
     public List<Message> getNotices(int userId, String topic, int offset, int limit){
         return messageMapper.getNotices(userId, topic, offset, limit);
+    }
+
+    // 删除私信message
+    public int deleteMessage(int id){
+        return messageMapper.updateStatus(Arrays.asList(new Integer[]{id}), 2);
     }
 }

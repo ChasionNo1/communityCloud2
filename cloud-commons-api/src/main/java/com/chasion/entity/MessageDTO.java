@@ -18,4 +18,9 @@ public class MessageDTO {
     // 状态，0是正常，1是不正常
     private int status;
     private Date createTime;
+    // 未读私信的条数
+    private int unreadLetterCount;
+    // 私信总条数
+    private int letterCount;
+    private UserDTO target;
 }
