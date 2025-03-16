@@ -1,0 +1,13 @@
+<!-- templates/error/error.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>错误页面</title>
+</head>
+<body>
+<h1>操作失败！</h1>
+<p th:text="'错误码：' + ${errorCode}"></p>
+<p th:text="'错误信息：' + ${errorMsg}"></p>
+<a th:href="@{/index}">返回首页</a>
+</body>
+</html>
