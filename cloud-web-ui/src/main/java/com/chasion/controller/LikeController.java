@@ -32,6 +32,7 @@ public class LikeController {
     public String like(int entityType, int entityId, int entityUserId, int postId){
         UserDTO user = hostHolder.getUser();
         // 这里调用usefeign
+        System.out.println("step into ----------");
         ResultData<HashMap<String, Object>> resultData =
                 userFeignApi.like(user.getId(), entityType, entityId, entityUserId);
         System.out.println(resultData.getData().toString());

@@ -53,7 +53,7 @@ public interface UserFeignApi {
     @PostMapping("/forget/password")
     public ResultData<String> forgetPassword(@RequestParam("email") String email, @RequestParam("password")String password);
 
-    @PostMapping("/likeService/like")
+    @PostMapping("/like")
     public ResultData<HashMap<String, Object>> like(@RequestParam("userId") int userId,
                                                     @RequestParam("entityType") int entityType,
                                                     @RequestParam("entityId") int entityId,

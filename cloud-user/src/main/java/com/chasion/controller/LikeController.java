@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/likeService")
+@RequestMapping("/userService")
 public class LikeController {
 
     @Autowired
