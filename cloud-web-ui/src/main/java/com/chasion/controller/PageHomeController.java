@@ -6,6 +6,8 @@ import com.chasion.apis.UserFeignApi;
 import com.chasion.entity.DiscussPostDTO;
 import com.chasion.entity.Page;
 import com.chasion.resp.ResultData;
+import com.chasion.utils.CommunityConstant;
+import com.chasion.utils.HostHolder;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +46,7 @@ public class PageHomeController {
                 HashMap<String, Object> Vo = new HashMap<>();
                 Vo.put("post", postDTO);
                 Vo.put("user", userFeignApi.findUserById(postDTO.getUserId()));
-                Vo.put("likeCount", 1);
+                Vo.put("likeCount", userFeignApi.getLikeCount(1, CommunityConstant.ENTITY_TYPE_POST, postDTO.getId()).getData().get("entityLikeCount"));
                 VoList.add(Vo);
 
             }

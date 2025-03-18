@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @FeignClient(name = "cloud-user", path = "/userService")
@@ -58,4 +59,45 @@ public interface UserFeignApi {
                                                     @RequestParam("entityType") int entityType,
                                                     @RequestParam("entityId") int entityId,
                                                     @RequestParam("entityUserId")int entityUserId);
+
+    @GetMapping("/get/likeCount")
+    public ResultData<HashMap<String, String>> getLikeCount(@RequestParam("userId") int userId,
+                                                            @RequestParam("entityType") int entityType,
+                                                            @RequestParam("entityId") int entityId);
+
+    @GetMapping("/get/user/likeCount")
+    public int getUserLikeCount(@RequestParam("userId") int userId);
+
+    @PostMapping("/follow/user")
+    public ResultData<Object> follow(@RequestParam("userId") int userId,
+                                     @RequestParam("entityType") int entityType,
+                                     @RequestParam("entityId") int entityId);
+
+    @PostMapping("/unfollow/user")
+    public ResultData<Object> unfollow(@RequestParam("userId") int userId,
+                                       @RequestParam("entityType") int entityType,
+                                       @RequestParam("entityId") int entityId);
+
+    @GetMapping("/get/followeeCount")
+    public long getFolloweeCount(@RequestParam("userId") int userId, @RequestParam("entityType") int entityType);
+
+    @GetMapping("/get/followerCount")
+    public long getFollowerCount(@RequestParam("entityType") int entityType, @RequestParam("entityId") int entityId);
+
+    @GetMapping("/get/isFollowed")
+    public boolean getIsFollowed(@RequestParam("userId") int userId,
+                                 @RequestParam("entityType") int entityType,
+                                 @RequestParam("entityId") int entityId);
+
+    @GetMapping("/get/followeeList")
+    public ResultData<List<Map<String, Object>>> getFolloweeList(@RequestParam("userId") int userId,
+                                                                 @RequestParam("entityType") int entityType,
+                                                                 @RequestParam("offset") int offset,
+                                                                 @RequestParam("limit") int limit);
+
+    @GetMapping("/get/followerList")
+    public ResultData<List<Map<String, Object>>> getFollowerList(@RequestParam("entityType") int entityType,
+                                                                 @RequestParam("entityId") int entityId,
+                                                                 @RequestParam("offset") int offset,
+                                                                 @RequestParam("limit") int limit);
 }

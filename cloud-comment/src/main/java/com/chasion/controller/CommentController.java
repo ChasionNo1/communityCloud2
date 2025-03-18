@@ -25,7 +25,7 @@ public class CommentController {
                                                        @RequestParam("limit")int limit) {
         ResultData<List<CommentDTO>> result = new ResultData<>();
         List<CommentDTO> commentDTOList = commentService.getCommentDTOList(entityType, entityId, offset, limit);
-        if (commentDTOList != null && commentDTOList.size() > 0) {
+        if (commentDTOList != null && !commentDTOList.isEmpty()) {
             result.setData(commentDTOList);
             result.setCode(ReturnCodeEnum.RC200.getCode());
             result.setMessage(ReturnCodeEnum.RC200.getMessage());

@@ -67,8 +67,6 @@ public class LikeService {
     // 查询某人对某实体的点赞状态
     public int getEntityLikeStatus(int userId, int entityType, int entityId){
         String entityLikeKey = RedisKeyUtil.getPrefixEntityLike(entityType, entityId);
-        System.out.println("----------key-----------");
-        //        System.out.println(entityLikeKey);
 //        System.out.println(userId);
 //        System.out.println(res);
         return redisTemplate.opsForSet().isMember(entityLikeKey, userId) ? 1 : 0;

@@ -1,5 +1,6 @@
 package com.chasion.controller;
 
+import com.chasion.annotation.LoginRequired;
 import com.chasion.apis.UserFeignApi;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
@@ -26,16 +27,14 @@ public class LikeController {
     @Autowired
     private UserFeignApi userFeignApi;
 
-
+    @LoginRequired
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
     public String like(int entityType, int entityId, int entityUserId, int postId){
         UserDTO user = hostHolder.getUser();
         // 这里调用usefeign
-        System.out.println("step into ----------");
         ResultData<HashMap<String, Object>> resultData =
                 userFeignApi.like(user.getId(), entityType, entityId, entityUserId);
-        System.out.println(resultData.getData().toString());
         // 触发点赞事件
 //        if (entityLikeStatus == 1){
 //            Event event = new Event()
@@ -54,7 +53,12 @@ public class LikeController {
 //            String postScoreKey = RedisKeyUtil.getPostScoreKey();
 //            redisTemplate.opsForSet().add(postScoreKey, postId);
 //        }
-        return CommunityUtil.getJSONString(0, null, new HashMap<>());
+
+        HashMap<String, String> map = userFeignApi.getLikeCount(user.getId(), entityType, entityId).getData();
+        HashMap<String, Object> res = new HashMap<>();
+        res.put("entityLikeCount", map.get("entityLikeCount"));
+        res.put("entityLikeStatus", map.get("entityLikeStatus"));
+        return CommunityUtil.getJSONString(0, null, res);
 
     }
 
