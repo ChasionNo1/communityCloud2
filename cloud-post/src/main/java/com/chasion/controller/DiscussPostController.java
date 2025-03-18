@@ -31,17 +31,17 @@ public class DiscussPostController{
 
     // 查询帖子总数，用于分页查询
     @GetMapping("/get/count")
-    public int discussPostCount(){
-        return discussPostService.findDiscussPostRows(0);
+    public int discussPostCount(@RequestParam("userId") int userId){
+        return discussPostService.findDiscussPostRows(userId);
     }
 
     // 返回首页帖子数据 DTO
     @PostMapping("/get/list")
-    public ResultData<List<DiscussPostDTO>> discussPosts(@RequestBody Page page, @RequestParam("orderMode") int orderMode) {
+    public ResultData<List<DiscussPostDTO>> discussPosts(@RequestParam("userId") int userId, @RequestBody Page page, @RequestParam("orderMode") int orderMode) {
         // 返回要查询的数据，带分页信息，定义一个返回数据接口
         // 查询分页数据
         ResultData<List<DiscussPostDTO>> resultData = new ResultData<>();
-        List<DiscussPostDTO> postDTOList = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit(), orderMode);
+        List<DiscussPostDTO> postDTOList = discussPostService.findDiscussPosts(userId, page.getOffset(), page.getLimit(), orderMode);
         if (postDTOList != null && !postDTOList.isEmpty()){
             resultData.setData(postDTOList);
         }else {

@@ -12,10 +12,10 @@ import java.util.List;
 public interface DiscussPostFeignApi {
 
     @GetMapping("/get/count")
-    public int discussPostCount();
+    public int discussPostCount(@RequestParam("userId") int  userId);
 
     @PostMapping("/get/list")
-    public ResultData<List<DiscussPostDTO>> discussPosts(@RequestBody Page page, @RequestParam("orderMode") int orderMode);
+    public ResultData<List<DiscussPostDTO>> discussPosts(@RequestParam("userId") int userId, @RequestBody Page page, @RequestParam("orderMode") int orderMode);
 
     @PostMapping("/add/discussPost")
     public ResultData<String> addDiscussPost(@RequestParam("userId") int userId, @RequestParam("title") String title, @RequestParam("content") String content);

@@ -33,12 +33,14 @@ public class PageHomeController {
     public String index(Model model, Page page, @RequestParam(name = "orderMode", defaultValue = "0") int orderMode) {
         // 在这个controller里要完成对首页数据的渲染
         // 需要帖子列表+帖子总数+user+likecount等数据，需要来自不同的模块
-        page.setRows(discussPostFeignApi.discussPostCount());
+//        page.setRows(discussPostFeignApi.discussPostCount(0));
+        System.out.println("step in");
+        System.out.println(discussPostFeignApi.discussPostCount(0));
         page.setPath("/index?orderMode=" + orderMode);
 
         // 获取帖子列表
         // 这里是服务器内部请求了，带参数
-        ResultData<List<DiscussPostDTO>> listResultData = discussPostFeignApi.discussPosts(page, orderMode);
+        ResultData<List<DiscussPostDTO>> listResultData = discussPostFeignApi.discussPosts(0, page, orderMode);
         List<DiscussPostDTO> postDTOS = listResultData.getData();
         List<HashMap<String, Object>> VoList = new ArrayList<>();
         if (postDTOS != null && !postDTOS.isEmpty()) {
