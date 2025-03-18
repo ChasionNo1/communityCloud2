@@ -1,5 +1,6 @@
 package com.chasion.controller;
 
+import com.chasion.entity.FollowListDTO;
 import com.chasion.resp.ResultData;
 import com.chasion.service.FollowService;
 import com.chasion.utils.CommunityConstant;
@@ -60,24 +61,24 @@ public class FollowController {
 
     // 获取关注列表：followService.getFolloweeList(userId, CommunityConstant.ENTITY_TYPE_USER, page.getOffset(), page.getLimit());
     @GetMapping("/get/followeeList")
-    public ResultData<List<Map<String, Object>>> getFolloweeList(@RequestParam("userId") int userId,
-                                              @RequestParam("entityType") int entityType,
-                                              @RequestParam("offset") int offset,
-                                              @RequestParam("limit") int limit){
-        List<Map<String, Object>> followeeList = followService.getFolloweeList(userId, entityType, offset, limit);
-        ResultData<List<Map<String, Object>>> resultData = new ResultData<>();
+    public ResultData<List<FollowListDTO>> getFolloweeList(@RequestParam("userId") int userId,
+                                                           @RequestParam("entityType") int entityType,
+                                                           @RequestParam("offset") int offset,
+                                                           @RequestParam("limit") int limit){
+        List<FollowListDTO> followeeList = followService.getFolloweeList(userId, entityType, offset, limit);
+        ResultData<List<FollowListDTO>> resultData = new ResultData<>();
         resultData.setData(followeeList);
         return resultData;
     }
 
     // 获取粉丝列表：public List<Map<String, Object>> getFollowerList(int entityType, int entityId, int offset, int limit)
     @GetMapping("/get/followerList")
-    public ResultData<List<Map<String, Object>>> getFollowerList(@RequestParam("entityType") int entityType,
+    public ResultData<List<FollowListDTO>> getFollowerList(@RequestParam("entityType") int entityType,
                                                                  @RequestParam("entityId") int entityId,
                                                                  @RequestParam("offset") int offset,
                                                                  @RequestParam("limit") int limit){
-        List<Map<String, Object>> followerList = followService.getFollowerList(entityType, entityId, offset, limit);
-        ResultData<List<Map<String, Object>>> resultData = new ResultData<>();
+        List<FollowListDTO> followerList = followService.getFollowerList(entityType, entityId, offset, limit);
+        ResultData<List<FollowListDTO>> resultData = new ResultData<>();
         resultData.setData(followerList);
         return resultData;
     }

@@ -1,5 +1,6 @@
 package com.chasion.service;
 
+import com.chasion.entity.FollowListDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.RedisKeyUtil;
@@ -82,41 +83,41 @@ public class FollowService {
     }
 
     // 查询某个用户关注的人，支持分页
-    public List<Map<String, Object>> getFolloweeList(int userId, int entityType, int offset, int limit){
+    public List<FollowListDTO> getFolloweeList(int userId, int entityType, int offset, int limit){
         String followeeKey = RedisKeyUtil.getFolloweeKey(userId, entityType);
         Set<Integer> ids = redisTemplate.opsForZSet().reverseRange(followeeKey, offset, offset + limit - 1);
         if (ids == null || ids.size() <= 0) return null;
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        List<FollowListDTO> list = new ArrayList<>();
         for (Integer id : ids) {
-            HashMap<String, Object> map = new HashMap<>();
+            FollowListDTO followListDTO = new FollowListDTO();
             UserDTO user = userService.findUserById(id);
-            map.put("user", user);
+            followListDTO.setUser(user);
             Double score = redisTemplate.opsForZSet().score(followeeKey, id);
-            map.put("followeeTime", new Date(score.longValue()));
+            followListDTO.setFolloweeTime(new Date(score.longValue()));
             // userId是否关注了id
             boolean followed = isFollowed(userId, CommunityConstant.ENTITY_TYPE_USER, id);
-            map.put("followed", followed);
-            list.add(map);
+            followListDTO.setFollowed(followed);
+            list.add(followListDTO);
         }
         return list;
     }
 
     // 查询某个用户的粉丝列表，支持分页
-    public List<Map<String, Object>> getFollowerList(int entityType, int entityId, int offset, int limit){
+    public List<FollowListDTO> getFollowerList(int entityType, int entityId, int offset, int limit){
         String followerKey = RedisKeyUtil.getFollowerKey(entityType, entityId);
         Set<Integer> ids = redisTemplate.opsForZSet().reverseRange(followerKey, offset, offset + limit - 1);
         if (ids == null || ids.size() <= 0) return null;
-        ArrayList<Map<String, Object>> list = new ArrayList<>();
+        ArrayList<FollowListDTO> list = new ArrayList<>();
         for (Integer id : ids) {
-            HashMap<String, Object> map = new HashMap<>();
+            FollowListDTO followListDTO = new FollowListDTO();
             UserDTO user = userService.findUserById(id);
-            map.put("user", user);
+            followListDTO.setUser(user);
             Double score = redisTemplate.opsForZSet().score(followerKey, id);
-            map.put("followerTime", new Date(score.longValue()));
+            followListDTO.setFolloweeTime(new Date(score.longValue()));
             // 关注情况
             boolean followed = isFollowed(entityId, CommunityConstant.ENTITY_TYPE_USER, id);
-            map.put("followed", followed);
-            list.add(map);
+            followListDTO.setFollowed(followed);
+            list.add(followListDTO);
         }
         return list;
 

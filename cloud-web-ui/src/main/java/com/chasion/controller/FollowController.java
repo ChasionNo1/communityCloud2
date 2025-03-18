@@ -3,9 +3,11 @@ package com.chasion.controller;
 //import com.chasion.entity.Event;
 import com.chasion.annotation.LoginRequired;
 import com.chasion.apis.UserFeignApi;
+import com.chasion.entity.FollowListDTO;
 import com.chasion.entity.Page;
 import com.chasion.entity.UserDTO;
 //import com.chasion.event.EventProducer;
+import com.chasion.resp.ResultData;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
 import com.chasion.utils.HostHolder;
@@ -70,7 +72,7 @@ public class FollowController implements CommunityConstant{
         page.setPath("/follow/list/" + userId);
         page.setLimit(10);
         // 设置volist
-        List<Map<String, Object>> followeeList = userFeignApi.getFolloweeList(userId, CommunityConstant.ENTITY_TYPE_USER, page.getOffset(), page.getLimit()).getData();
+        List<FollowListDTO> followeeList = userFeignApi.getFolloweeList(userId, CommunityConstant.ENTITY_TYPE_USER, page.getOffset(), page.getLimit()).getData();
         model.addAttribute("followeeList", followeeList);
         UserDTO user = userFeignApi.findUserById(userId);
         model.addAttribute("user", user);
@@ -87,7 +89,7 @@ public class FollowController implements CommunityConstant{
         page.setPath("/follower/list/" + userId);
         page.setLimit(10);
         // 设置volist
-        List<Map<String, Object>> followerList = userFeignApi.getFollowerList(CommunityConstant.ENTITY_TYPE_USER, userId, page.getOffset(), page.getLimit()).getData();
+        List<FollowListDTO> followerList = userFeignApi.getFollowerList(CommunityConstant.ENTITY_TYPE_USER, userId, page.getOffset(), page.getLimit()).getData();
         model.addAttribute("followerList", followerList);
         UserDTO user = userFeignApi.findUserById(userId);
         model.addAttribute("user", user);

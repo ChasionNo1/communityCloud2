@@ -1,5 +1,6 @@
 package com.chasion.apis;
 
+import com.chasion.entity.FollowListDTO;
 import com.chasion.entity.LoginTicketDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
@@ -90,13 +91,13 @@ public interface UserFeignApi {
                                  @RequestParam("entityId") int entityId);
 
     @GetMapping("/get/followeeList")
-    public ResultData<List<Map<String, Object>>> getFolloweeList(@RequestParam("userId") int userId,
-                                                                 @RequestParam("entityType") int entityType,
-                                                                 @RequestParam("offset") int offset,
-                                                                 @RequestParam("limit") int limit);
+    public ResultData<List<FollowListDTO>> getFolloweeList(@RequestParam("userId") int userId,
+                                                           @RequestParam("entityType") int entityType,
+                                                           @RequestParam("offset") int offset,
+                                                           @RequestParam("limit") int limit);
 
     @GetMapping("/get/followerList")
-    public ResultData<List<Map<String, Object>>> getFollowerList(@RequestParam("entityType") int entityType,
+    public ResultData<List<FollowListDTO>> getFollowerList(@RequestParam("entityType") int entityType,
                                                                  @RequestParam("entityId") int entityId,
                                                                  @RequestParam("offset") int offset,
                                                                  @RequestParam("limit") int limit);
