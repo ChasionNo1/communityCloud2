@@ -6,11 +6,13 @@ import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
 import com.chasion.utils.MailClient;
+import com.chasion.utils.RedisKeyUtil;
 import com.google.code.kaptcha.Producer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class LoginController {
@@ -45,6 +48,9 @@ public class LoginController {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     // 响应登录页面
     @GetMapping("/login")
@@ -61,13 +67,13 @@ public class LoginController {
                         HttpSession session, HttpServletResponse response, @CookieValue("kaptchaOwner") String kaptchaOwner) {
         // 验证码在客户获取登录页面的时候加载，信息已经存入到session中，
         // 此时需要将客户从前端页面中输入的验证码和session中取到的验证码进行对比
-        String serverKaptcha = (String)session.getAttribute("captcha");
+//        String serverKaptcha = (String)session.getAttribute("captcha");
         // 重构：从redis里取验证码
-//        String serverKaptcha = null;
-//        if (StringUtils.isNotBlank(kaptchaOwner)){
-//            String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
-//            serverKaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
-//        }
+        String serverKaptcha = null;
+        if (StringUtils.isNotBlank(kaptchaOwner)){
+            String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+            serverKaptcha = (String) redisTemplate.opsForValue().get(kaptchaKey);
+        }
 
 
         // 验证码不正确，页面需要回填数据，重新填写验证码即可
@@ -107,7 +113,7 @@ public class LoginController {
         BufferedImage image = captchaProducer.createImage(text);
 
 //         将验证码存入session
-        session.setAttribute("captcha", text);
+//        session.setAttribute("captcha", text);
         // 重构验证码存放的位置，放到redis里
         // 需要临时凭证
         String kaptchaOwner = CommunityUtil.generateUUID();
@@ -116,8 +122,8 @@ public class LoginController {
         cookie.setPath("/");
         response.addCookie(cookie);
         // 将验证码存入redis中
-//        String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
-//        redisTemplate.opsForValue().set(kaptchaKey, text, 60, TimeUnit.SECONDS);
+        String kaptchaKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+        redisTemplate.opsForValue().set(kaptchaKey, text, 60, TimeUnit.SECONDS);
 
         // 将图片输出给浏览器
         response.setContentType("image/png");
