@@ -3,6 +3,7 @@ package com.chasion.config;
 //import com.chasion.community.controller.interceptor.*;
 import com.chasion.controller.interceptor.LoginRequiredInterceptor;
 import com.chasion.controller.interceptor.LoginTicketInterceptor;
+import com.chasion.controller.interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -23,8 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //    @Autowired
 //    private DataInterceptor dataInterceptor;
 //
-//    @Autowired
-//    private MessageInterceptor messageInterceptor;
+    @Autowired
+    private MessageInterceptor messageInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -38,8 +39,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginRequiredInterceptor)
                 .excludePathPatterns("/*.css", "/*.js", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif");
 
-//        registry.addInterceptor(messageInterceptor)
-//                .excludePathPatterns("/*.css", "/*.js", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif");
+        registry.addInterceptor(messageInterceptor)
+                .excludePathPatterns("/*.css", "/*.js", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif");
 //        registry.addInterceptor(dataInterceptor)
 //                .excludePathPatterns("/*.css", "/*.js", "/*.png", "/*.jpg", "/*.jpeg", "/*.gif");
     }

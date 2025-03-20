@@ -187,8 +187,8 @@ public class MessageController {
 
         MessageDTO lastFollow = messageFeignApi.getLastNotice(user.getId(), TOPIC_FOLLOW).getData();
         HashMap<String, Object> FollowVO = new HashMap<>();
+        FollowVO.put("lastFollow", lastFollow);
         if (lastFollow != null){
-            FollowVO.put("lastFollow", lastFollow);
             String content = HtmlUtils.htmlUnescape(lastFollow.getContent());
             HashMap data = JSONObject.parseObject(content, HashMap.class);
             FollowVO.put("user", userFeignApi.findUserById((Integer)data.get("userId")));
