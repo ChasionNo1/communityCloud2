@@ -1,6 +1,8 @@
 package com.chasion.controller;
 
+import com.chasion.entity.Event;
 import com.chasion.entity.FollowListDTO;
+import com.chasion.event.EventProducer;
 import com.chasion.resp.ResultData;
 import com.chasion.service.FollowService;
 import com.chasion.utils.CommunityConstant;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Map;
+
+import static com.chasion.utils.CommunityConstant.TOPIC_FOLLOW;
 
 @RestController
 @RequestMapping("/userService")
@@ -22,11 +26,22 @@ public class FollowController {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @PostMapping("/follow/user")
     public ResultData<Object> follow(@RequestParam("userId") int userId,
                                      @RequestParam("entityType") int entityType,
                                      @RequestParam("entityId") int entityId) {
         followService.follow(userId, entityType, entityId);
+        // 触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setUserId(userId)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
         return new ResultData<>();
     }
 

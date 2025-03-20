@@ -34,7 +34,7 @@ public class LikeController {
         UserDTO user = hostHolder.getUser();
         // 这里调用usefeign
         ResultData<HashMap<String, Object>> resultData =
-                userFeignApi.like(user.getId(), entityType, entityId, entityUserId);
+                userFeignApi.like(user.getId(), entityType, entityId, entityUserId, postId);
         // 触发点赞事件
 //        if (entityLikeStatus == 1){
 //            Event event = new Event()

@@ -52,4 +52,12 @@ public class CommentService {
         return commentMapper.insertComment(comment);
     }
 
+    // 根据id获取comment
+    public CommentDTO getCommentById(int commentId) {
+        Comment comment = commentMapper.selectCommentById(commentId);
+        CommentDTO commentDTO = new CommentDTO();
+        BeanUtils.copyProperties(comment, commentDTO);
+        return commentDTO;
+    }
+
 }
