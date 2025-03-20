@@ -108,8 +108,16 @@ public class MessageService {
 //        return ids;
 //    }
 
-    public Message getLastNotice(int userId, String topic){
-        return messageMapper.getLatestNotice(userId, topic);
+    public MessageDTO getLastNotice(int userId, String topic){
+        Message latestNotice = messageMapper.getLatestNotice(userId, topic);
+        System.out.println("service latestNotice: " + latestNotice);
+        MessageDTO messageDTO = new MessageDTO();
+        if (latestNotice != null){
+            BeanUtils.copyProperties(latestNotice, messageDTO);
+        }else {
+            messageDTO = null;
+        }
+        return messageDTO;
     }
 
     public int getNoticeCount(int userId, String topic){
@@ -120,8 +128,17 @@ public class MessageService {
         return messageMapper.getUnreadNoticeCount(userId, topic);
     }
 
-    public List<Message> getNotices(int userId, String topic, int offset, int limit){
-        return messageMapper.getNotices(userId, topic, offset, limit);
+    public List<MessageDTO> getNotices(int userId, String topic, int offset, int limit){
+        List<Message> notices = messageMapper.getNotices(userId, topic, offset, limit);
+        List<MessageDTO> dtos = new ArrayList<>();
+        if (notices != null){
+            for (Message notice : notices) {
+                MessageDTO dto = new MessageDTO();
+                BeanUtils.copyProperties(notice, dto);
+                dtos.add(dto);
+            }
+        }
+        return dtos;
     }
 
     // 删除私信message

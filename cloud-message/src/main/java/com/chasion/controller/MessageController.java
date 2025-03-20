@@ -1,6 +1,9 @@
 package com.chasion.controller;
 
+import com.chasion.entity.Message;
 import com.chasion.entity.MessageDTO;
+import com.chasion.resp.ResultData;
+import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +78,77 @@ public class MessageController {
         return messageService.deleteMessage(id);
     }
 
+    // 获取最近的通知内容
+    // MessageDTO lastComment = messageService.getLastNotice(user.getId(), TOPIC_COMMENT);
+    @GetMapping("/get/lastNotice")
+    public ResultData<MessageDTO> getLastNotice(@RequestParam("userId") int userId, @RequestParam(value = "topic") String topic){
+        MessageDTO lastNotice = messageService.getLastNotice(userId, topic);
+        System.out.println("lastNotice: " + lastNotice);
+        ResultData<MessageDTO> resultData = new ResultData<>();
+        if (lastNotice != null){
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+            resultData.setData(lastNotice);
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC999.getMessage());
+        }
+        return resultData;
+
+    }
+
+
+    // 获取系统消息相关的数据
+    // int commentCount = messageService.getNoticeCount(user.getId(), TOPIC_COMMENT);
+    // int unreadCommentCount = messageService.getUnreadNoticeCount(user.getId(), TOPIC_COMMENT);
+    @GetMapping("/get/notice/data")
+    public ResultData<HashMap<String, Integer>> getNoticeData(@RequestParam("userId") int userId, @RequestParam(value = "topic", required = false) String topic){
+        ResultData<HashMap<String, Integer>> resultData = new ResultData<>();
+        int noticeCount = messageService.getNoticeCount(userId, topic);
+        int unreadNoticeCount = messageService.getUnreadNoticeCount(userId, topic);
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("noticeCount", noticeCount);
+        map.put("unreadNoticeCount", unreadNoticeCount);
+        resultData.setData(map);
+        return resultData;
+    }
+
+    // 获取系统通知消息列表
+    // messageFeignApi.getNotices(user.getId(), topic, page.getOffset(), page.getLimit());
+    @GetMapping("/get/noticeList")
+    public ResultData<List<MessageDTO>> getNoticeList(@RequestParam("userId") int userId,
+                                                      @RequestParam("topic") String topic,
+                                                      @RequestParam("offset") int offset,
+                                                      @RequestParam("limit") int limit){
+        List<MessageDTO> notices = messageService.getNotices(userId, topic, offset, limit);
+        ResultData<List<MessageDTO>> resultData = new ResultData<>();
+        if (notices != null){
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+            resultData.setData(notices);
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC999.getMessage());
+        }
+        return resultData;
+    }
+
+    // 设置系统消息为已读
+    @PostMapping("/set/notice/read")
+    public ResultData<String> readMessage(@RequestBody List<MessageDTO> messageDTOS, @RequestParam("userId") int userId){
+        int rows = messageService.readMessage(messageDTOS, userId);
+        ResultData<String> resultData = new ResultData<>();
+        if (rows > 0){
+            resultData.setCode(ReturnCodeEnum.RC200.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        }else {
+            resultData.setCode(ReturnCodeEnum.RC999.getCode());
+            resultData.setMessage(ReturnCodeEnum.RC999.getMessage());
+        }
+        return resultData;
+    }
 
 
 

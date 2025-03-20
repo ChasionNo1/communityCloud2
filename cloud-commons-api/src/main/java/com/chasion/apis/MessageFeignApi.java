@@ -1,6 +1,7 @@
 package com.chasion.apis;
 
 import com.chasion.entity.MessageDTO;
+import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,20 @@ public interface MessageFeignApi {
 
     @PostMapping("/delete/letter")
     public int deleteMessage(@RequestParam("id") int id);
+
+    @GetMapping("/get/lastNotice")
+    public ResultData<MessageDTO> getLastNotice(@RequestParam("userId") int userId, @RequestParam("topic") String topic);
+
+    @GetMapping("/get/notice/data")
+    public ResultData<HashMap<String, Integer>> getNoticeData(@RequestParam("userId") int userId, @RequestParam(value = "topic", required = false) String topic);
+
+    @GetMapping("/get/noticeList")
+    public ResultData<List<MessageDTO>> getNoticeList(@RequestParam("userId") int userId,
+                                                      @RequestParam("topic") String topic,
+                                                      @RequestParam("offset") int offset,
+                                                      @RequestParam("limit") int limit);
+
+    @PostMapping("/set/notice/read")
+    public ResultData<String> readMessage(@RequestBody List<MessageDTO> messageDTOS, @RequestParam("userId") int userId);
 }
 

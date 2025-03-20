@@ -87,6 +87,8 @@ public class PostController {
         // 设置评论分页
         page.setLimit(5);
         page.setPath("/discuss/" + id);
+        System.out.println("post rows = " + post.getCommentCount());
+        // 帖子的评论数量
         page.setRows(post.getCommentCount());
 
         // 获取帖子的评论列表

@@ -22,4 +22,7 @@ public interface DiscussPostFeignApi {
 
     @GetMapping("/get/discuss/{id}")
     public DiscussPostDTO getDiscussPost(@PathVariable("id") int id);
+
+    @PostMapping("/update/commentCount")
+    public int updateCommentCount(@RequestParam("postId") int postId, @RequestParam("commentCount") int commentCount);
 }

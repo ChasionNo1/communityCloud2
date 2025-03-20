@@ -37,6 +37,8 @@ public class CommentController {
         comment.setCreateTime(new Date());
         DiscussPostDTO target = discussPostFeignApi.getDiscussPost(comment.getEntityId());
         commentFeignApi.addComment(userId, discussPostId, target.getUserId(), comment);
+//        // 更新帖子的评论数量?  增加数量
+        discussPostFeignApi.updateCommentCount(discussPostId, 1);
 
 
         return "redirect:/discuss/" + discussPostId;

@@ -47,10 +47,11 @@ public class DiscussPostService {
         }
         return postDTOList;
     }
-    // 查询帖子总数
+    // 查询某个用户发布的帖子总数
     public int findDiscussPostRows(int userId){
         return discussPostMapper.selectDiscussPostRows(userId);
     }
+
 
     // 发布帖子
     public int addDiscussPost(DiscussPost discussPost){
@@ -89,7 +90,8 @@ public class DiscussPostService {
 
     // 更新帖子的评论数量
     public int updateCommentCount(int id, int commentCount){
-        return discussPostMapper.updateCommentCount(id,commentCount);
+        DiscussPost discussPost = discussPostMapper.selectDiscussPostById(id);
+        return discussPostMapper.updateCommentCount(id,commentCount+discussPost.getCommentCount());
     }
 
     // 更新帖子类型

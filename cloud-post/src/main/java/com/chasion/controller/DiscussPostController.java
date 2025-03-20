@@ -64,6 +64,12 @@ public class DiscussPostController{
         return discussPostService.findDiscussPostById(id);
     }
 
+    // 更新帖子的评论数量
+    @PostMapping("/update/commentCount")
+    public int updateCommentCount(@RequestParam("postId") int postId, @RequestParam("commentCount") int commentCount) {
+        return discussPostService.updateCommentCount(postId, commentCount);
+    }
+
 
 
 
