@@ -71,14 +71,24 @@ public class PostController {
         UserDTO user = userFeignApi.findUserById(userId);
         model.addAttribute("post", post);
         model.addAttribute("user", user);
-        HashMap<String, String> map = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_POST, post.getId()).getData();
+        // 这里有问题，如果没登陆访问帖子详情的话，这里会有问题
+        // required=false
+        HashMap<String, String> map = new HashMap<>();
+        int entityLikeStatus = 0;
+        if (hostHolder.getUser() != null) {
+             map = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_POST, post.getId()).getData();
+             entityLikeStatus = Integer.parseInt(map.get("entityLikeStatus"));
+
+        }else {
+        }
+        Object likeCount = map.get("entityLikeCount");
         // 帖子的赞数量
         // 这里有问题，类型转换的问题：
-        Object likeCount = map.get("entityLikeCount");
+
 //        System.out.println("------------:" + likeCount);
         model.addAttribute("likeCount", likeCount);
-        // 点赞状态
-        int likeStatus = hostHolder.getUser() == null ? 0 : Integer.parseInt(map.get("entityLikeStatus"));
+        // 点赞状态，这里也进行了判断，但是在这之前还有hostholder的使用
+        int likeStatus = hostHolder.getUser() == null ? 0 : entityLikeStatus;
 //        System.out.println(likeStatus);
         model.addAttribute("likeStatus", likeStatus);
 //        System.out.println("-----------------帖子----------------------------");
@@ -87,14 +97,14 @@ public class PostController {
         // 设置评论分页
         page.setLimit(5);
         page.setPath("/discuss/" + id);
-        System.out.println("post rows = " + post.getCommentCount());
+//        System.out.println("post rows = " + post.getCommentCount());
         // 帖子的评论数量
         page.setRows(post.getCommentCount());
 
         // 获取帖子的评论列表
         List<CommentDTO> commentList = commentFeignApi.getCommentList(ENTITY_TYPE_POST, post.getId(), page.getOffset(), page.getLimit()).getData();
         // 封装信息，评论者信息，评论内容信息，以及评论的回复信息
-        List<Map<String, Object>> commentVolist = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> commentVolist = new ArrayList<>();
         if (commentList != null && !commentList.isEmpty()) {
             for (CommentDTO comment : commentList) {
                 HashMap<String, Object> commentVo = new HashMap<>();
@@ -103,9 +113,18 @@ public class PostController {
                 // 评论者
                 commentVo.put("user", userFeignApi.findUserById(comment.getUserId()));
                 // 评论的赞数量和状态
-                HashMap<String, String> commentLikeData = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId()).getData();
+                // 这地方也是的
+                HashMap<String, String> commentLikeData = new HashMap<>();
+                int commentLikeStatus = 0;
+                if (hostHolder.getUser() != null) {
+                    commentLikeData = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId()).getData();
+                    commentLikeStatus = Integer.parseInt(commentLikeData.get("entityLikeStatus"));
+                }else {
+
+                }
+
                 likeCount = commentLikeData.get("entityLikeCount");
-                likeStatus = hostHolder.getUser() == null ? 0 : Integer.parseInt(commentLikeData.get("entityLikeStatus"));
+                likeStatus = hostHolder.getUser() == null ? 0 : commentLikeStatus;
                 commentVo.put("likeStatus", likeStatus);
                 commentVo.put("likeCount", likeCount);
 //                System.out.println("-------------------评论----------------------------");
@@ -127,10 +146,15 @@ public class PostController {
                         UserDTO target = reply.getTargetId() == 0 ? null : userFeignApi.findUserById(reply.getTargetId());
 //                        System.out.println("target id: " + reply.getTargetId());
                         replyVo.put("target", target);
-                        HashMap<String, String> replyCountData = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, reply.getId()).getData();
+                        HashMap<String, String> replyCountData = new HashMap<>();
+                        int replyLikeStatus = 0;
+                        if (hostHolder.getUser() != null) {
+                            replyCountData = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, reply.getId()).getData();
+                            replyLikeStatus = Integer.parseInt(replyCountData.get("entityLikeStatus"));
+                        }
                         // 回复的点赞数量和状态
                         likeCount =  replyCountData.get("entityLikeCount");
-                        likeStatus = hostHolder.getUser() == null ? 0 : Integer.parseInt(replyCountData.get("entityLikeStatus"));
+                        likeStatus = hostHolder.getUser() == null ? 0 : replyLikeStatus;
 //                        likeStatus = hostHolder.getUser() == null ? 0 : likeService.getEntityLikeStatus();
                         replyVo.put("likeStatus", likeStatus);
                         replyVo.put("likeCount", likeCount);

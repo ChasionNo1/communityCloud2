@@ -65,12 +65,17 @@ public class LikeController {
     }
 
     @GetMapping("/get/likeCount")
-    public ResultData<HashMap<String, String>> getLikeCount(@RequestParam("userId") int userId,
+    public ResultData<HashMap<String, String>> getLikeCount(@RequestParam(value = "userId", required = false) Integer userId,
                                                             @RequestParam("entityType") int entityType,
                                                             @RequestParam("entityId") int entityId){
         HashMap<String, String> map = new HashMap<>();
         map.put("entityLikeCount", likeService.getEntityLikeCount(entityType, entityId) + "");
-        map.put("entityLikeStatus", likeService.getEntityLikeStatus(userId, entityType, entityId) + "");
+        // 如果没有用户登录，就不需要展示点赞情况
+        if (userId == null){
+            map.put("entityLikeCount", "0");
+        }else {
+            map.put("entityLikeStatus", likeService.getEntityLikeStatus(userId, entityType, entityId) + "");
+        }
         System.out.println("step into ----------");
         System.out.println(map.get("entityLikeCount"));
         System.out.println(map.get("entityLikeStatus"));

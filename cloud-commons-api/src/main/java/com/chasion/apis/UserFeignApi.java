@@ -63,7 +63,7 @@ public interface UserFeignApi {
                                                     @RequestParam("postId") int postId);
 
     @GetMapping("/get/likeCount")
-    public ResultData<HashMap<String, String>> getLikeCount(@RequestParam("userId") int userId,
+    public ResultData<HashMap<String, String>> getLikeCount(@RequestParam(value = "userId", required = false) Integer userId,
                                                             @RequestParam("entityType") int entityType,
                                                             @RequestParam("entityId") int entityId);
 

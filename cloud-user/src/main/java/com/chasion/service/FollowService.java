@@ -93,7 +93,7 @@ public class FollowService {
             UserDTO user = userService.findUserById(id);
             followListDTO.setUser(user);
             Double score = redisTemplate.opsForZSet().score(followeeKey, id);
-            followListDTO.setFolloweeTime(new Date(score.longValue()));
+            followListDTO.setFollowTime(new Date(score.longValue()));
             // userId是否关注了id
             boolean followed = isFollowed(userId, CommunityConstant.ENTITY_TYPE_USER, id);
             followListDTO.setFollowed(followed);
@@ -113,7 +113,7 @@ public class FollowService {
             UserDTO user = userService.findUserById(id);
             followListDTO.setUser(user);
             Double score = redisTemplate.opsForZSet().score(followerKey, id);
-            followListDTO.setFolloweeTime(new Date(score.longValue()));
+            followListDTO.setFollowTime(new Date(score.longValue()));
             // 关注情况
             boolean followed = isFollowed(entityId, CommunityConstant.ENTITY_TYPE_USER, id);
             followListDTO.setFollowed(followed);

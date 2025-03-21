@@ -8,6 +8,6 @@ import java.util.Date;
 public class FollowListDTO {
     // 关注列表DTO
     private UserDTO user;
-    private Date followeeTime;
+    private Date followTime;
     private boolean followed;
 }
