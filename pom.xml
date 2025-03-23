@@ -16,6 +16,8 @@
         <module>cloud-web-ui</module>
         <module>cloud-comment</module>
         <module>cloud-message</module>
+        <module>cloud-search</module>
+        <module>cloud-search</module>
     </modules>
 
     <properties>
@@ -27,6 +29,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <mybatis.springboot.version>3.0.2</mybatis.springboot.version>
         <mysql.version>8.0.33</mysql.version>
+
     </properties>
     <dependencyManagement>
         <dependencies>

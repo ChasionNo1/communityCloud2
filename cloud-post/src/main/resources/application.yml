@@ -9,3 +9,17 @@ spring:
       discovery:
         server-addr: localhost:8848
 
+  elasticsearch:
+    username: elastic
+    password: 199725
+    certificate-fingerprint: openssl x509 -fingerprint -sha256 -in config/elastic-certificates.p12
+    uris: http://localhost:9200, http://localhost:9300
+    schema: http # 协议
+    address: 192.168.6.89:9200 # IP:端口号
+    connect-timeout: 5000 # 连接超时
+    socket-timeout: 10000 # socket 连接超时时间
+    connection-request-timeout: 5000 # 连接请求超时
+    max-connect-num: 100 # 最大连接数
+    max-connect-per-route: 100 # 最大路由连接数
+
+

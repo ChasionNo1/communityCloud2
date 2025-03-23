@@ -3,7 +3,9 @@ package com.chasion.service;
 import com.chasion.entity.DiscussPostDTO;
 import com.chasion.dao.DiscussPostMapper;
 import com.chasion.entity.DiscussPost;
+import com.chasion.entity.Event;
 import com.chasion.entity.UserDTO;
+import com.chasion.event.EventProducer;
 import com.chasion.utils.HostHolder;
 import com.chasion.utils.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.chasion.utils.CommunityConstant.ENTITY_TYPE_POST;
+import static com.chasion.utils.CommunityConstant.TOPIC_PUBLISH;
+
 @Service
 public class DiscussPostService {
 
@@ -22,6 +27,9 @@ public class DiscussPostService {
 
     @Autowired
     private SensitiveFilter sensitiveFilter;
+
+    @Autowired
+    private EventProducer eventProducer;
 
 
     // 查询分页数据  这里带userId是为了后面查看个人用户发的帖子
@@ -115,6 +123,15 @@ public class DiscussPostService {
         discussPost.setTitle(sensitiveFilter.filter(HtmlUtils.htmlEscape(title)));
         discussPost.setContent(sensitiveFilter.filter(HtmlUtils.htmlEscape(content)));
         discussPost.setCreateTime(new Date());
+
+        // 触发发帖事件，将新发布的帖子存到es服务器中
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(userId)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(discussPost.getId());
+        eventProducer.fireEvent(event);
+
         return discussPostMapper.insertDiscussPost(discussPost);
 
     }

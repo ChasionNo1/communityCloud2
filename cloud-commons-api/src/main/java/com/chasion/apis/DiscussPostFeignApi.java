@@ -6,6 +6,7 @@ import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @FeignClient(name = "cloud-post", path = "discussPost")
@@ -25,4 +26,9 @@ public interface DiscussPostFeignApi {
 
     @PostMapping("/update/commentCount")
     public int updateCommentCount(@RequestParam("postId") int postId, @RequestParam("commentCount") int commentCount);
+
+    @GetMapping("/search")
+    public ResultData<List<DiscussPostDTO>> searchDiscussPost(@RequestParam("keyword") String keyword,
+                                                              @RequestParam("current") int current,
+                                                              @RequestParam("limit") int limit) throws IOException;
 }
