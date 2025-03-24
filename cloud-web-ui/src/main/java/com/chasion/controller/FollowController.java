@@ -6,8 +6,6 @@ import com.chasion.apis.UserFeignApi;
 import com.chasion.entity.FollowListDTO;
 import com.chasion.entity.Page;
 import com.chasion.entity.UserDTO;
-//import com.chasion.event.EventProducer;
-import com.chasion.resp.ResultData;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
 import com.chasion.utils.HostHolder;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class FollowController implements CommunityConstant{

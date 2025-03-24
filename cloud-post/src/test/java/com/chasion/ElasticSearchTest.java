@@ -29,12 +29,12 @@ public class ElasticSearchTest {
 
 
 
-    @Test
-    public void testInsert() {
-        discussPostRepository.save(discussPostMapper.selectDiscussPostById(241));
-        discussPostRepository.save(discussPostMapper.selectDiscussPostById(242));
-        discussPostRepository.save(discussPostMapper.selectDiscussPostById(243));
-    }
+//    @Test
+//    public void testInsert() {
+//        discussPostRepository.save(discussPostMapper.selectDiscussPostById(241));
+//        discussPostRepository.save(discussPostMapper.selectDiscussPostById(242));
+//        discussPostRepository.save(discussPostMapper.selectDiscussPostById(243));
+//    }
 
     @Test
     public void testElasticSearchClient() throws IOException {

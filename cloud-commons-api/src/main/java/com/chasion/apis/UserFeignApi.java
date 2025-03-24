@@ -7,6 +7,7 @@ import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,4 +103,7 @@ public interface UserFeignApi {
                                                                  @RequestParam("entityId") int entityId,
                                                                  @RequestParam("offset") int offset,
                                                                  @RequestParam("limit") int limit);
+
+    @GetMapping("/get/password")
+    public ResultData<String> getPassword(@RequestParam("userId") int userId);
 }

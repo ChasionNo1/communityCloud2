@@ -62,10 +62,14 @@ public class PageHomeController {
         return "index";
     }
 
-    @GetMapping("/test")
-    @ResponseBody
-    public String test() {
-        return "test";
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    public String getErrorPage(){
+        return "/error/500";
+    }
+
+    @RequestMapping(path = "/denied", method = RequestMethod.GET)
+    public String getDeniedPage(){
+        return "/error/404";
     }
 
 }

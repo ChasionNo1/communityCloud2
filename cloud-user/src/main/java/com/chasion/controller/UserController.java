@@ -1,18 +1,15 @@
 package com.chasion.controller;
 
-import com.chasion.entity.LoginTicket;
+
 import com.chasion.entity.LoginTicketDTO;
+import com.chasion.entity.User;
 import com.chasion.entity.UserDTO;
 import com.chasion.resp.ResultData;
 import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/userService")
@@ -163,6 +160,22 @@ public class UserController {
             resultData.setMessage(map.get("msg").toString());
         }
         return resultData;
+    }
+
+    // getAuthorities(user.getId())
+    // ！！！！这里不能调用到spring security
+//    @GetMapping("/get/authorities")
+//    public ResultData<Collection<? extends GrantedAuthority>> getAuthorities(@RequestParam("userId") int userId) {
+//        Collection<? extends GrantedAuthority> authorities = userService.getAuthorities(userId);
+//        return new ResultData<Collection<? extends GrantedAuthority>>().setData(authorities);
+//    }
+
+    // 获取用户密码，感觉是危险行为
+    @GetMapping("/get/password")
+    public ResultData<String> getPassword(@RequestParam("userId") int userId) {
+        ResultData<String> resultData = new ResultData<>();
+        User userWithPsdById = userService.findUserWithPsdById(userId);
+        return resultData.setData(userWithPsdById.getPassword());
     }
 
 

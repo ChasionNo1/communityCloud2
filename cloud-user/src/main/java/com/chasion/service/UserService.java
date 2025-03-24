@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -37,6 +34,10 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    public User findUserWithPsdById(int id){
+        return userMapper.selectById(id);
+    }
 
     // 根据用户id查询用户名
     public UserDTO findUserById(int id){
@@ -311,4 +312,27 @@ public class UserService implements CommunityConstant {
         String userKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(userKey);
     }
+
+    // 获取用户的权限
+    // 这里不能引入spring security
+//    public Collection<? extends GrantedAuthority> getAuthorities(int userId){
+//        // 这里面获取不到use的密码，用的是DTO，所以得改一下
+//        User user = this.findUserWithPsdById(userId);
+//
+//        ArrayList<GrantedAuthority> list = new ArrayList<>();
+//        list.add(new GrantedAuthority() {
+//            @Override
+//            public String getAuthority() {
+//                switch (user.getType()){
+//                    case 1:
+//                        return AUTHORITY_ADMIN;
+//                    case 2:
+//                        return AUTHORITY_MODERATOR;
+//                    default:
+//                        return AUTHORITY_USER;
+//                }
+//            }
+//        });
+//        return list;
+//    }
 }
