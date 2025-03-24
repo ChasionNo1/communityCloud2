@@ -44,6 +44,8 @@ public class EventConsumer implements CommunityConstant {
         }
 
         // 查询帖子
+        System.out.println("---------消费者出发添加到es中----------");
+        System.out.println("event entityId= " + event.getEntityId());
         DiscussPostDTO post = discussPostService.findDiscussPostById(event.getEntityId());
         // 存到es服务器中
         if (post != null) {

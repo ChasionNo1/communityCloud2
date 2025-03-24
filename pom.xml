@@ -16,8 +16,6 @@
         <module>cloud-web-ui</module>
         <module>cloud-comment</module>
         <module>cloud-message</module>
-        <module>cloud-search</module>
-        <module>cloud-search</module>
     </modules>
 
     <properties>

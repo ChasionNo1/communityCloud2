@@ -123,6 +123,8 @@ public class DiscussPostService {
         discussPost.setTitle(sensitiveFilter.filter(HtmlUtils.htmlEscape(title)));
         discussPost.setContent(sensitiveFilter.filter(HtmlUtils.htmlEscape(content)));
         discussPost.setCreateTime(new Date());
+        // 这里要先插入才能获取到id
+        int row = discussPostMapper.insertDiscussPost(discussPost);
 
         // 触发发帖事件，将新发布的帖子存到es服务器中
         Event event = new Event()
@@ -131,8 +133,9 @@ public class DiscussPostService {
                 .setEntityType(ENTITY_TYPE_POST)
                 .setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
+        System.out.println("-----------发帖事件出发成功----------");
 
-        return discussPostMapper.insertDiscussPost(discussPost);
+        return row;
 
     }
 

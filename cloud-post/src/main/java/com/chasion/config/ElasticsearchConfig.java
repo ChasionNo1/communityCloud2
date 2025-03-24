@@ -4,6 +4,8 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -85,11 +87,14 @@ public class ElasticsearchConfig {
                                 .setSSLContext(sslContext)
                 )
                 .build();
+        // 4. 配置 Jackson 忽略未知字段
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        // 4. 创建 Transport 和 Client
+        // 5. 创建 Transport 和 Client
         ElasticsearchTransport transport = new RestClientTransport(
                 restClient,
-                new JacksonJsonpMapper() // 使用 Jackson 处理 JSON
+                new JacksonJsonpMapper(objectMapper) // 使用 Jackson 处理 JSON
         );
 
         return new ElasticsearchClient(transport);
