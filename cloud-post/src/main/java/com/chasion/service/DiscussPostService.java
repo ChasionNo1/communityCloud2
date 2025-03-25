@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.chasion.utils.CommunityConstant.ENTITY_TYPE_POST;
-import static com.chasion.utils.CommunityConstant.TOPIC_PUBLISH;
+import static com.chasion.utils.CommunityConstant.*;
 
 @Service
 public class DiscussPostService {
@@ -103,11 +102,37 @@ public class DiscussPostService {
     }
 
     // 更新帖子类型
-    public int updateType(int id, int type){
+    public int updateType(int id, int type, int userId){
+        // 同步帖子数据到es中
+        // 触发事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(userId)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityType(id);
+        eventProducer.fireEvent(event);
         return discussPostMapper.updateType(id,type);
     }
 
-    public int updateStatus(int id, int status){
+    public int setDiscussPostWonderful(int id, int status, int userId){
+        // 同步到es中
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(userId)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityType(id);
+        eventProducer.fireEvent(event);
+        return discussPostMapper.updateStatus(id,status);
+    }
+
+    public int deleteDiscussPost(int id, int status, int userId){
+        // 触发事件
+        Event event = new Event()
+                .setTopic(TOPIC_DELETE)
+                .setUserId(userId)
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityType(id);
+        eventProducer.fireEvent(event);
         return discussPostMapper.updateStatus(id,status);
     }
 

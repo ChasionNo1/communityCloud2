@@ -31,4 +31,13 @@ public interface DiscussPostFeignApi {
     public ResultData<List<DiscussPostDTO>> searchDiscussPost(@RequestParam("keyword") String keyword,
                                                               @RequestParam("current") int current,
                                                               @RequestParam("limit") int limit) throws IOException;
+
+    @PostMapping("/update/discuss/type")
+    public ResultData<Integer> setTop(@RequestParam("id") int id, @RequestParam("type") int type, @RequestParam("userId") int userId);
+
+    @PostMapping("/update/discuss/wonderful")
+    public ResultData<Integer> setStatus(@RequestParam("id") int id, @RequestParam("status") int status, @RequestParam("userId") int userId);
+
+    @PostMapping("/update/discuss/delete")
+    public ResultData<Integer> setDelete(@RequestParam("id") int id, @RequestParam("status") int status, @RequestParam("userId") int userId);
 }

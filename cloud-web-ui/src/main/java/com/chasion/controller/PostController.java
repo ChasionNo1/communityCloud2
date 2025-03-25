@@ -40,7 +40,7 @@ public class PostController {
 
     /**
      * 帖子模块
-     * */
+     */
     // 处理发布帖子的异步请求
     // 从页面接收数据，做一下过滤，然后添加到数据库中，然后刷新一下页面
     @PostMapping("/discuss/add")
@@ -76,28 +76,23 @@ public class PostController {
         HashMap<String, String> map = new HashMap<>();
         int entityLikeStatus = 0;
         if (hostHolder.getUser() != null) {
-             map = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_POST, post.getId()).getData();
-             entityLikeStatus = Integer.parseInt(map.get("entityLikeStatus"));
+            map = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_POST, post.getId()).getData();
+            entityLikeStatus = Integer.parseInt(map.get("entityLikeStatus"));
 
-        }else {
+        } else {
         }
         Object likeCount = map.get("entityLikeCount");
         // 帖子的赞数量
         // 这里有问题，类型转换的问题：
 
-//        System.out.println("------------:" + likeCount);
         model.addAttribute("likeCount", likeCount);
         // 点赞状态，这里也进行了判断，但是在这之前还有hostholder的使用
         int likeStatus = hostHolder.getUser() == null ? 0 : entityLikeStatus;
-//        System.out.println(likeStatus);
         model.addAttribute("likeStatus", likeStatus);
-//        System.out.println("-----------------帖子----------------------------");
-//        System.out.println("likeCount:" + likeCount);
-//        System.out.println("likeStatus:" + likeStatus);
         // 设置评论分页
         page.setLimit(5);
         page.setPath("/discuss/" + id);
-//        System.out.println("post rows = " + post.getCommentCount());
+
         // 帖子的评论数量
         page.setRows(post.getCommentCount());
 
@@ -119,7 +114,7 @@ public class PostController {
                 if (hostHolder.getUser() != null) {
                     commentLikeData = userFeignApi.getLikeCount(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId()).getData();
                     commentLikeStatus = Integer.parseInt(commentLikeData.get("entityLikeStatus"));
-                }else {
+                } else {
 
                 }
 
@@ -127,9 +122,6 @@ public class PostController {
                 likeStatus = hostHolder.getUser() == null ? 0 : commentLikeStatus;
                 commentVo.put("likeStatus", likeStatus);
                 commentVo.put("likeCount", likeCount);
-//                System.out.println("-------------------评论----------------------------");
-//                System.out.println("likeCount:" + likeCount);
-//                System.out.println("likeStatus:" + likeStatus);
                 // 评论的回复信息
                 // 查询所有回复信息
                 List<CommentDTO> replyList = commentFeignApi.getCommentList(ENTITY_TYPE_COMMENT, comment.getId(), 0, Integer.MAX_VALUE).getData();
@@ -153,7 +145,7 @@ public class PostController {
                             replyLikeStatus = Integer.parseInt(replyCountData.get("entityLikeStatus"));
                         }
                         // 回复的点赞数量和状态
-                        likeCount =  replyCountData.get("entityLikeCount");
+                        likeCount = replyCountData.get("entityLikeCount");
                         likeStatus = hostHolder.getUser() == null ? 0 : replyLikeStatus;
 //                        likeStatus = hostHolder.getUser() == null ? 0 : likeService.getEntityLikeStatus();
                         replyVo.put("likeStatus", likeStatus);
@@ -173,8 +165,35 @@ public class PostController {
         return "/site/discuss-detail";
     }
 
-    // 添加评论
+    // 置顶帖子
+    // 0是普通，1是置顶
+    @RequestMapping(value = "/discuss/top", method = RequestMethod.POST)
+    @ResponseBody
+    public String setTop(int id) {
+        UserDTO user = hostHolder.getUser();
+        // 调用user服务
+        discussPostFeignApi.setTop(id, 1, user.getId());
+        return CommunityUtil.getJSONString(0);
+    }
 
+    // 加精帖子
+    //  0是正常， 1是精华，2是拉黑
+    @RequestMapping(path = "/discuss/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    public String setWonderful(int id) {
+        UserDTO user = hostHolder.getUser();
+        discussPostFeignApi.setStatus(id, 1, user.getId());
 
+        return CommunityUtil.getJSONString(0);
+    }
+
+    //    删除帖子
+    @RequestMapping(path = "/discuss/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(int id) {
+        UserDTO user = hostHolder.getUser();
+        discussPostFeignApi.setStatus(id, 2, user.getId());
+        return CommunityUtil.getJSONString(0);
+    }
 
 }

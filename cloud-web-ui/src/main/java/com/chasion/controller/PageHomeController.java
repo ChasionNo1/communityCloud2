@@ -36,9 +36,7 @@ public class PageHomeController {
     public String index(Model model, Page page, @RequestParam(name = "orderMode", defaultValue = "0") int orderMode) {
         // 在这个controller里要完成对首页数据的渲染
         // 需要帖子列表+帖子总数+user+likecount等数据，需要来自不同的模块
-//        page.setRows(discussPostFeignApi.discussPostCount(0));
-        System.out.println("step in");
-        System.out.println(discussPostFeignApi.discussPostCount(0));
+        page.setRows(discussPostFeignApi.discussPostCount(0));
         page.setPath("/index?orderMode=" + orderMode);
 
         // 获取帖子列表

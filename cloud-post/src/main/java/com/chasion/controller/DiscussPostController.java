@@ -76,6 +76,42 @@ public class DiscussPostController{
         return discussPostService.updateCommentCount(postId, commentCount);
     }
 
+    // 置顶帖子
+    // int id, int type
+    // 0是普通，1是置顶
+    @PostMapping("/update/discuss/type")
+    public ResultData<Integer> setTop(@RequestParam("id") int id, @RequestParam("type") int type, @RequestParam("userId") int userId) {
+        int row = discussPostService.updateType(id, type, userId);
+        ResultData<Integer> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        resultData.setData(row);
+        return resultData;
+    }
+
+    // 加精帖子,修改帖子的状态
+    @PostMapping("/update/discuss/wonderful")
+    public ResultData<Integer> setStatus(@RequestParam("id") int id, @RequestParam("status") int status, @RequestParam("userId") int userId) {
+        int row = discussPostService.setDiscussPostWonderful(id, status, userId);
+        ResultData<Integer> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        resultData.setData(row);
+        return resultData;
+    }
+    // 删除帖子
+    @PostMapping("/update/discuss/delete")
+    public ResultData<Integer> setDelete(@RequestParam("id") int id, @RequestParam("status") int status, @RequestParam("userId") int userId) {
+        int row = discussPostService.deleteDiscussPost(id, status, userId);
+        ResultData<Integer> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        resultData.setData(row);
+        return resultData;
+    }
+
+
+
 
 
 
