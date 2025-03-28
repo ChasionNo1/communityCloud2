@@ -10,6 +10,7 @@ import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
 import com.chasion.utils.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
+@RefreshScope
 public class FollowController implements CommunityConstant{
 
     @Autowired

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.HashMap;
 import java.util.List;
 
-@FeignClient(value = "cloud-message", path = "/messageService")
+@FeignClient(value = "cloud-message", path = "/messageService", fallback = MessageFeignApiFallback.class)
 public interface MessageFeignApi {
 
     @GetMapping("/get/getConversationCount")

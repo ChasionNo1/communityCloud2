@@ -17,6 +17,7 @@ import com.chasion.service.DiscussPostService;
 //import com.chasion.cloudpost.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import static com.chasion.utils.CommunityConstant.TOPIC_PUBLISH;
 
 @RestController
 @RequestMapping("/discussPost")
+@RefreshScope
 public class DiscussPostController{
 
     @Autowired

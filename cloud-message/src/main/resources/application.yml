@@ -1,9 +1,5 @@
 server:
   port: 8006
 spring:
-  application:
-    name: cloud-message
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+  profiles:
+    active: dev

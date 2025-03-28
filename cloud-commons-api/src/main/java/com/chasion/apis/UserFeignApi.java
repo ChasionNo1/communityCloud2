@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "cloud-user", path = "/userService")
+@FeignClient(name = "cloud-user", path = "/userService", fallback = UserFeignApiFallback.class)
 public interface UserFeignApi {
 
     @GetMapping("/getUser/id/{id}")

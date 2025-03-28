@@ -7,6 +7,7 @@ import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.LikeService;
 import com.chasion.utils.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import static com.chasion.utils.CommunityConstant.TOPIC_LIKE;
 
 @RestController
 @RequestMapping("/userService")
+@RefreshScope
 public class LikeController {
 
     @Autowired

@@ -7,6 +7,7 @@ import com.chasion.utils.HostHolder;
 import com.chasion.utils.SensitiveFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@RefreshScope
 public class MessageService {
     @Autowired
     private MessageMapper messageMapper;

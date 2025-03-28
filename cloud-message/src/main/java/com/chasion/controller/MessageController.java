@@ -6,6 +6,7 @@ import com.chasion.resp.ResultData;
 import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/messageService")
+@RefreshScope
 public class MessageController {
 
     @Autowired

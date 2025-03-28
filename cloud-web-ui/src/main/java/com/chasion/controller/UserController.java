@@ -10,6 +10,7 @@ import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/user")
+@RefreshScope
 public class UserController {
     /**
      * 个人主页和信息

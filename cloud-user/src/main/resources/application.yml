@@ -1,10 +1,7 @@
 server:
-  port: 82
-spring:
-  application:
-    name: cloud-user
+  port: 8002
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
+spring:
+  profiles:
+    active: dev
+

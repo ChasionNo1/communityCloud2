@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Controller
+@RefreshScope
 public class LoginController {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 

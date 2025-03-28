@@ -15,6 +15,7 @@ import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RefreshScope
 public class UserService implements CommunityConstant {
 
     @Autowired

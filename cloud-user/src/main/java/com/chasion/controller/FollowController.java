@@ -7,6 +7,7 @@ import com.chasion.resp.ResultData;
 import com.chasion.service.FollowService;
 import com.chasion.utils.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.transform.Result;
@@ -17,6 +18,7 @@ import static com.chasion.utils.CommunityConstant.TOPIC_FOLLOW;
 
 @RestController
 @RequestMapping("/userService")
+@RefreshScope
 public class FollowController {
 
     /**

@@ -1,13 +1,5 @@
 server:
   port: 8001
 spring:
-  application:
-    name: cloud-web-ui
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-logging:
-  level:
-    org.springframework.security: ERROR
-    org.thymeleaf: ERROR
+  profiles:
+    active: dev

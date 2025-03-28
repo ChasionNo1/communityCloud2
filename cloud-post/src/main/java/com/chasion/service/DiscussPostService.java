@@ -9,6 +9,7 @@ import com.chasion.event.EventProducer;
 import com.chasion.utils.HostHolder;
 import com.chasion.utils.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import static com.chasion.utils.CommunityConstant.*;
 
 @Service
+@RefreshScope
 public class DiscussPostService {
 
     @Autowired

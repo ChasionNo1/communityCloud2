@@ -1,23 +1,7 @@
 server:
-  port: 8080
+  port: 8009
 spring:
-  application:
-    name: cloud-gateway
-
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-    gateway:
-      routes:
-        - id: cloud-web-ui
-          uri: lb://cloud-web-ui
-          predicates:
-            - Path=/**
-logging:
-  level:
-    org.springframework.cloud.gateway: TRACE   # 打印详细的网关路由和过滤信息
-    reactor.netty.http.client: DEBUG          # 查看下游服务请求日志
-
+  profiles:
+    active: dev
 
 

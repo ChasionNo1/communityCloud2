@@ -8,11 +8,13 @@ import com.chasion.resp.ResultData;
 import com.chasion.resp.ReturnCodeEnum;
 import com.chasion.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
 @RequestMapping("/userService")
+@RefreshScope
 public class UserController {
 
     @Autowired
@@ -177,8 +179,6 @@ public class UserController {
         User userWithPsdById = userService.findUserWithPsdById(userId);
         return resultData.setData(userWithPsdById.getPassword());
     }
-
-
 
 
 

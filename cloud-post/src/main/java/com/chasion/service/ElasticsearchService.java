@@ -7,12 +7,14 @@ import com.chasion.dao.DiscussPostRepository;
 import com.chasion.entity.DiscussPost;
 import com.chasion.entity.DiscussPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RefreshScope
 public class ElasticsearchService {
 
     @Autowired

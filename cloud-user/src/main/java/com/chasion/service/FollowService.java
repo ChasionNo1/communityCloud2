@@ -5,6 +5,7 @@ import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@RefreshScope
 public class FollowService {
 
     @Autowired

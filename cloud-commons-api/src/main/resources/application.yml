@@ -1,11 +1,5 @@
 server:
   port: 8004
 spring:
-  application:
-    name: cloud-commons-api
-
-  cloud:
-    nacos:
-      discovery:
-        server-addr: localhost:8848
-
+  profiles:
+    active: dev

@@ -11,6 +11,7 @@ import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityUtil;
 import com.chasion.utils.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import static com.chasion.utils.CommunityConstant.ENTITY_TYPE_COMMENT;
 import static com.chasion.utils.CommunityConstant.ENTITY_TYPE_POST;
 
 @Controller
+@RefreshScope
 public class PostController {
 
     @Autowired
