@@ -6,20 +6,16 @@ import com.chasion.entity.LoginTicketDTO;
 import com.chasion.entity.UserDTO;
 import com.chasion.utils.CommunityConstant;
 import com.chasion.utils.CommunityUtil;
-import com.chasion.utils.MailClient;
 import com.chasion.dao.UserMapper;
 import com.chasion.entity.User;
 import com.chasion.utils.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.jcajce.provider.digest.MD5;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

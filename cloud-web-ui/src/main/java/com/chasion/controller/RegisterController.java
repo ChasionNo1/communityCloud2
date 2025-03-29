@@ -67,12 +67,12 @@ public class RegisterController implements CommunityConstant {
             mailClient.sendMail(userDTO.getEmail(), "激活账号", content);
             model.addAttribute("msg", "注册成功，我们已经向您的邮箱发送了一封激活邮件，请尽快激活!");
             model.addAttribute("target", "/index");
-            return "/site/operate-result";
+            return "site/operate-result";
         }else {
             model.addAttribute("usernameMsg", resultData.getData().get("usernameMessage"));
             model.addAttribute("passwordMsg", resultData.getData().get("passwordMessage"));
             model.addAttribute("emailMsg", resultData.getData().get("emailMessage"));
-            return "/site/register";
+            return "site/register";
         }
     }
 
@@ -93,6 +93,6 @@ public class RegisterController implements CommunityConstant {
             model.addAttribute("msg", "激活失败，激活码有误!");
             model.addAttribute("target", "/index");
         }
-        return "/site/operate-result";
+        return "site/operate-result";
     }
 }

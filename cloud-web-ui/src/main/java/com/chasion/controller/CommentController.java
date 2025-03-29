@@ -31,7 +31,7 @@ public class CommentController {
      * */
 
     // 评论和回复用的是一个实体，只是实体类型不一样
-    @RequestMapping(value = "/comment//add/{discussPostId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/comment/add/{discussPostId}", method = RequestMethod.POST)
     public String addComment(@PathVariable("discussPostId") int discussPostId, Model model, CommentDTO comment) {
         int userId = hostHolder.getUser().getId();
         comment.setUserId(userId);

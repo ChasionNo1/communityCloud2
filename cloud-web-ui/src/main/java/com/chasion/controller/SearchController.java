@@ -57,6 +57,6 @@ public class SearchController {
         page.setRows(discussPosts == null ? 0 : discussPosts.size());
         page.setLimit(5);
 
-        return "/site/search";
+        return "site/search";
     }
 }

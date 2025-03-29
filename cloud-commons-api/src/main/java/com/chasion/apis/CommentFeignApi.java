@@ -1,7 +1,6 @@
 package com.chasion.apis;
 
 import com.chasion.entity.CommentDTO;
-import com.chasion.entity.DiscussPostDTO;
 import com.chasion.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

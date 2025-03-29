@@ -69,7 +69,7 @@ public class UserController {
         model.addAttribute("followed", followed);
 
 
-        return "/site/profile";
+        return "site/profile";
     }
 
     /**
@@ -107,7 +107,7 @@ public class UserController {
         }
         model.addAttribute("postList", list);
 
-        return "/site/my-post";
+        return "site/my-post";
     }
 
     /**
@@ -142,7 +142,7 @@ public class UserController {
             }
         }
         model.addAttribute("commentList", list);
-        return "/site/my-reply";
+        return "site/my-reply";
     }
 
 }

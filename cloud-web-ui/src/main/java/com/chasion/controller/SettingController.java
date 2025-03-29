@@ -58,7 +58,7 @@ public class SettingController {
     public String upload(@RequestParam("headerImage") MultipartFile headerImage, Model model) {
         if (headerImage == null) {
             model.addAttribute("error", "Please select a file.");
-            return "/site/setting";
+            return "site/setting";
         }
         // 获取用户上传的文件名，只是取后缀用
         String filename = headerImage.getOriginalFilename();
@@ -66,7 +66,7 @@ public class SettingController {
         String suffix = filename.substring(filename.lastIndexOf("."));
         if(StringUtils.isBlank(suffix)){
             model.addAttribute("error", "文件格式不正确.");
-            return "/site/setting";
+            return "site/setting";
         }
 
         // 生成随机文件名
@@ -142,7 +142,7 @@ public class SettingController {
             model.addAttribute("confirmMsg", map.get("confirmPasswordMsg"));
             // 重定向是两次请求，不携带数据
 //            return "forward:/site/setting";
-            return "/site/setting";
+            return "site/setting";
         }
     }
 

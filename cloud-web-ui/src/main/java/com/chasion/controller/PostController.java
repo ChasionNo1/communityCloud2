@@ -164,7 +164,7 @@ public class PostController {
         }
         model.addAttribute("comments", commentVolist);
 
-        return "/site/discuss-detail";
+        return "site/discuss-detail";
     }
 
     // 置顶帖子

@@ -1,6 +1,5 @@
 package com.chasion.utils;
 
-import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

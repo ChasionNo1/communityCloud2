@@ -50,7 +50,7 @@ public class MessageController {
         page.setPath("/letter/list");
         // 会话列表
         // 这里还获取了会话列表，可以在这次请求里完成
-        System.out.println("userID" + user.getId());
+//        System.out.println("userID" + user.getId());
         List<MessageDTO> conversationVoList = messageFeignApi.getConversation(user.getId(), page.getOffset(), page.getLimit());
         // 未读私信所有
         int unreadLetterCount = countMap.get("unreadLetterCount");
@@ -76,7 +76,7 @@ public class MessageController {
         model.addAttribute("unreadNoticeTotalCount", unreadNoticeTotalCount);
 
 
-        return "/site/letter";
+        return "site/letter";
     }
 
     // 发送私信功能
@@ -130,7 +130,7 @@ public class MessageController {
         }
 
         model.addAttribute("letters", letterVoList);
-        return "/site/letter-detail";
+        return "site/letter-detail";
     }
 
     // 删除私信
@@ -213,7 +213,7 @@ public class MessageController {
         HashMap<String, Integer> countMap = messageFeignApi.getConversationCount(user.getId());
         int unreadLetterCount = countMap.get("unreadLetterCount");
         model.addAttribute("unreadLetterCount", unreadLetterCount);
-        return "/site/notice";
+        return "site/notice";
     }
 
     // 处理三种不同类型的通知
@@ -247,7 +247,7 @@ public class MessageController {
         // 设置已读，调用service处理
         messageFeignApi.readMessage(noticeList, user.getId());
 
-        return "/site/notice-detail";
+        return "site/notice-detail";
     }
 
 

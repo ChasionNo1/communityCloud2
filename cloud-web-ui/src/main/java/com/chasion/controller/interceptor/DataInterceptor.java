@@ -26,7 +26,7 @@ public class DataInterceptor implements HandlerInterceptor {
         dataService.recordUV(ip);
         // 统计dau
         UserDTO user = hostHolder.getUser();
-        System.out.println("data interceptor user: " + user);
+//        System.out.println("data interceptor user: " + user);
         if (user != null){
             dataService.recordDau(user.getId());
         }

@@ -82,7 +82,7 @@ public class LoginController {
         // 验证码不正确，页面需要回填数据，重新填写验证码即可
         if (StringUtils.isBlank(serverKaptcha) || StringUtils.isBlank(code) || !serverKaptcha.equalsIgnoreCase(code)){
             model.addAttribute("codeMsg", "验证码不正确");
-            return "/site/login";
+            return "site/login";
         }
 
         // 账号，密码验证
@@ -101,7 +101,7 @@ public class LoginController {
         }else {
             model.addAttribute("usernameMsg", map.get("usernameMsg"));
             model.addAttribute("passwordMsg", map.get("passwordMsg"));
-            return "/site/login";
+            return "site/login";
         }
 
     }
@@ -187,7 +187,7 @@ public class LoginController {
         // 如果验证码不一致
         if (!code.equals(verifyCode)){
             model.addAttribute("verifyCodeMsg", "验证码有误!");
-            return "/site/forget";
+            return "site/forget";
         }else {
             // 验证码一致，调用user服务
             ResultData<String> resultData = userFeignApi.forgetPassword(email, newPassword);
@@ -198,7 +198,7 @@ public class LoginController {
                 // 如果失败了，这里没有对密码进行校验，只是针对邮箱
                 model.addAttribute("emailMsg", "邮箱有误!");
                 // 继续在这个页面
-                return "/site/forget";
+                return "site/forget";
             }
         }
     }

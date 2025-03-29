@@ -76,7 +76,7 @@ public class FollowController implements CommunityConstant{
         UserDTO user = userFeignApi.findUserById(userId);
         model.addAttribute("user", user);
         //
-        return "/site/followee";
+        return "site/followee";
 
     }
 
@@ -92,7 +92,7 @@ public class FollowController implements CommunityConstant{
         model.addAttribute("followerList", followerList);
         UserDTO user = userFeignApi.findUserById(userId);
         model.addAttribute("user", user);
-        return "/site/follower";
+        return "site/follower";
     }
 
 }
