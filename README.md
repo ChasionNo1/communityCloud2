@@ -10,6 +10,8 @@ nacos:2.2.3
 es:8.5.3
 kafka:2.13-3.7.0
 sentinel:1.8.6
+mysql:8.0.36
+redis:5.0.14.1(windows)
 
 ```
 
